@@ -1,6 +1,6 @@
 export default class Global{
 	// static httpUrl='/';
-	static httpUrl='https://18869e3h55.goho.co/';
+	static httpUrl='http://api.guosuan.cc/admin/';
 	// static httpUrl='https://9351k0522v.zicp.fun/';
 	// static httpUrl='https://www.boxdance.net/admin/';
 	static uploadUrl='/';

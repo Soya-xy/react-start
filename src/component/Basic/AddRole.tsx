@@ -197,7 +197,7 @@ const CustomCheckBox: React.FC<CustomCheckBoxProps> = ({ value = {}, onChange })
         <div className='cklist'>
             {!loading && <Spin tip="加载中..." style={{ display: 'block', margin: '50px auto 0' }} />}
             {loading && menu.map((item: any, index: number) => (
-                <div key={String(index)} className='flex checklist'>
+                <div key={String(index)} className='flexSelf checklist'>
                     {/* 一级选项 */}
                     <Checkbox
                         // checked={item.checked}
@@ -210,7 +210,7 @@ const CustomCheckBox: React.FC<CustomCheckBoxProps> = ({ value = {}, onChange })
                     {/* 二级 */}
                     {item.child && item.child.length > 0 && <div className='rowFlex'>
                         {item.child.map((row: any, k: number) => (
-                            <div key={String(k)} className='flex checklist'>
+                            <div key={String(k)} className='flexSelf checklist'>
                                 <Checkbox
                                     // checked={row.checked}
                                     indeterminate={isIndeterminate(index, k)}

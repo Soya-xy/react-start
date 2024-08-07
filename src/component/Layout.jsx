@@ -10,15 +10,10 @@ import UserInfo from './UserInfo';  //个人信息
 import SetColor from './SetColor';  //主题配色
 // loading页
 import Loading from './Loading';
-// 路由
-const AdminList = lazy(() => import('./Basic/AdminList'));  // 管理员列表
-const RoleList = lazy(() => import('./Basic/RoleList'));  //角色列表
-const BasicInfo = lazy(() => import('./Set/BasicInfo'));  // 基本信息配置
-const MenuSet = lazy(() => import('./Set/MenuSet'));  // 菜单管理
-const UploadSet = lazy(() => import('./Set/UploadSet'));  // 上传设置
-const OperationLog = lazy(() => import('./Set/OperationLog'));  // 操作日志
-const Goods=lazy(() => import('./Goods/Goods'));  // 商品列表
-const Orders=lazy(() => import('./Goods/Orders'));  // 商品列表
+import { Components } from '~/utils/route';
+
+
+
 function getItem(label, key, path, icon, children, type) {
     return {
         key,
@@ -33,19 +28,12 @@ function getItem(label, key, path, icon, children, type) {
 const { Header, Content, Sider } = Layout;
 let rootSubmenuKeys = [];
 
-const Components = {
-    'AdminList': AdminList,
-    'RoleList': RoleList,
-    'BasicInfo': BasicInfo,
-    "MenuSet": MenuSet,
-    "UploadSet": UploadSet,
-    "OperationLog": OperationLog,
-    "Goods":Goods,
-    "Orders":Orders
-}
 let tabRef = [];
+
+const menuList  = Components();
+
 const list = (path, id) => {
-    var MyComponentt = Components[path];
+    var MyComponentt = menuList[path];
     tabRef[id] = createRef();
     return <MyComponentt ref={tabRef[id]} />;
 }
@@ -65,8 +53,10 @@ const Index = () => {
     const [pwdVisible, setPwdVisible] = useState(false);  // 修改密码弹出层
     const [infoVisible, setInfoVisible] = useState(false);  // 修改个人信息弹出层
     const [themeVisible, setThemeVisible] = useState(false);  // 主题弹出层
-    const [info, setInfo] = useState({ avatar:
-         import('../imgs/default.png'), username: '', systemName: '中软互联管理后台' })
+    const [info, setInfo] = useState({
+        avatar: new URL('../imgs/default.png', import.meta.url).href,
+        username: '', systemName: '中软互联管理后台'
+    })
     const [username, setUsername] = useState('');
     const [avatar, setAvatar] = useState('');
     const [sysName, setSysName] = useState('中软互联管理后台');
@@ -107,12 +97,11 @@ const Index = () => {
                 setSysName(res.data.name)
                 setUsername(res.data.username)
                 setAvatar(res.data.avatar)
-                setInfo(
-                    { 
-                        avatar: res.data.avatar,
-                         username: res.data.username,
-                          systemName: res.data.name }
-                )
+                setInfo({
+                    avatar: res.data.avatar,
+                    username: res.data.username,
+                    systemName: res.data.name
+                })
                 // let menus = [
                 //     {
                 //         id: 1, title: '基本管理', path: '', icon: 'icon-yonghu', child: [
@@ -166,20 +155,26 @@ const Index = () => {
                         }
                     }
                 }
+
+                if (import.meta.env.DEV) {
+                    console.log(import.meta.env)
+                    items.push(getItem('代码生成', 999, 'CodeGenerate', <p className="iconfont i-carbon:cics-program"></p>))
+                }
+                console.log("🚀 ~ req.post ~ menu:", items)
+
                 // 设置选择的menu
-                console.log(menus)
-                let setSelectedKeysArr,selectedLabel,selectedId,SelectedPath;
-                if(menus[0].child.length==0)
-                {
-                    setSelectedKeysArr=[String(menus[0].id)];
-                    selectedLabel={ label: menus[0].title, key: String(menus[0].id), path: menus[0].path, closable: false }
-                    selectedId=String(menus[0].id)
-                    SelectedPath=String(menus[0].path)
-                }else{
-                    setSelectedKeysArr=[String(menus[0].child[0].id), String(menus[0].id)];
-                    selectedId=String(menus[0].child[0].id)
-                    SelectedPath=String(menus[0].child[0].path)
-                    selectedLabel= { label: menus[0].child[0].title, key: String(menus[0].child[0].id), path: menus[0].child[0].path, closable: false }
+
+                let setSelectedKeysArr, selectedLabel, selectedId, SelectedPath;
+                if (menus[0].child.length == 0) {
+                    setSelectedKeysArr = [String(menus[0].id)];
+                    selectedLabel = { label: menus[0].title, key: String(menus[0].id), path: menus[0].path, closable: false }
+                    selectedId = String(menus[0].id)
+                    SelectedPath = String(menus[0].path)
+                } else {
+                    setSelectedKeysArr = [String(menus[0].child[0].id), String(menus[0].id)];
+                    selectedId = String(menus[0].child[0].id)
+                    SelectedPath = String(menus[0].child[0].path)
+                    selectedLabel = { label: menus[0].child[0].title, key: String(menus[0].child[0].id), path: menus[0].child[0].path, closable: false }
                 }
                 setSelectedKeys(setSelectedKeysArr)
                 // 设置左边menu
@@ -347,10 +342,10 @@ const Index = () => {
                             <p className='iconfont icon-zhuti'></p>
                             <p>主题</p>
                         </div>
-                        <img alt='' src={avatar!=""?import('../imgs/default.png'):import('../imgs/default.png')} className='avatar' />
+                        <img alt='' src={avatar != "" ? avatar : new URL('../imgs/default.png', import.meta.url).href} className='avatar' />
                         <Dropdown placement='bottom' menu={{ items }} arrow>
                             <div className='flexCenter cursor' style={{ height: 24, }}>
-                                 <p>{username}</p>
+                                <p>{username}</p>
                                 <span className='iconfont icon-jiantou-shang'></span>
                             </div>
                         </Dropdown>

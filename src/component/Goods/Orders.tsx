@@ -7,7 +7,7 @@ import CustomSelect from '../../common/Select';
 import * as req from '../../class/request';
 import OrderFh from './OrderFh';
 
-const Index = (_props: any, ref: any) => {
+const Orders = (_props: any, ref: any) => {
 	const {
 		token: { colorPrimary, colorError },
 	} = theme.useToken();
@@ -234,4 +234,4 @@ const Index = (_props: any, ref: any) => {
 	)
 };
 
-export default forwardRef(Index);
+export default forwardRef(Orders);

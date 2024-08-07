@@ -91,7 +91,7 @@ const Index = (props: any, _ref: any) => {
     }
     return (
         <div className='setColorBox'>
-            <div className='flex'>
+            <div className='flexSelf'>
                 <div className='left'>
                     <div className='ltop'>
                         {/* 左边目录 */}

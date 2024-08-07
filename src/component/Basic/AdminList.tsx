@@ -7,7 +7,7 @@ import CustomSelect from '../../common/Select';
 import * as req from '../../class/request';
 import AddAdmin from './AddAdmin';
 
-const Index = (_props: any, ref: any) => {
+const AdminList = (_props: any, ref: any) => {
 	const {
 		token: { colorPrimary },
 	} = theme.useToken();
@@ -161,4 +161,4 @@ const Index = (_props: any, ref: any) => {
 	)
 };
 
-export default forwardRef(Index);
+export default forwardRef(AdminList);

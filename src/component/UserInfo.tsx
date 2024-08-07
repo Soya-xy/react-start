@@ -18,7 +18,7 @@ const CustomUpload: React.FC<types> = ({ value = '', onChange }) => {
             <div className='editavatar cursor' style={{ border: value !== '' ? 0 : '' }} onClick={() => {
                 fileRef.current.refresh();
             }}>
-                {value === '' && <img alt='' src={require('../imgs/default.png')} />}
+                {value === '' && <img alt='' src={new URL('../imgs/default.png', import.meta.url).href} />}
                 {value !== '' && <img alt='' src={value} style={{ width: '60px', height: '60px' }} />}
                 <span className='zi'>修改头像</span>
             </div>

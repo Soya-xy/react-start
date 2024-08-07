@@ -77,7 +77,7 @@ const Login = () => {
                         autoComplete="new-password"
                     />
                 </Form.Item>
-                <div className='flex'>
+                <div className='flexSelf'>
                     <Form.Item name="code" className='rowFlex' rules={[{ required: true, message: '请输入图形验证码!' }]}>
                         <Input
                             prefix={<span className='iconfont icon-a-yanzhengmaanquan'></span>}

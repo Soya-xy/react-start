@@ -16,7 +16,7 @@ import * as req from '../../class/request';
 // ]
 const typeList = ['', '文本', '数字', '图片', '图文', '开/关'];
 
-const Index = (_props: any, ref: any) => {
+const BasicInfo = (_props: any, ref: any) => {
 	const {
 		token: { colorPrimary, colorWarning, colorInfo, colorSuccess },
 	} = theme.useToken();
@@ -163,4 +163,4 @@ const Index = (_props: any, ref: any) => {
 	)
 };
 
-export default forwardRef(Index);
+export default forwardRef(BasicInfo);

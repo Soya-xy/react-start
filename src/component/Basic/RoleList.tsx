@@ -6,7 +6,7 @@ import CustomModal from '../../common/Modal';
 import AddRole from './AddRole';  // 添加/编辑角色
 import * as req from '../../class/request';
 
-const Index = (_props: any, _ref: any) => {
+const RoleList = (_props: any, _ref: any) => {
 	const {
 		token: { colorPrimary },
 	} = theme.useToken();
@@ -134,4 +134,4 @@ const Index = (_props: any, _ref: any) => {
 	)
 };
 
-export default forwardRef(Index);
+export default forwardRef(RoleList);

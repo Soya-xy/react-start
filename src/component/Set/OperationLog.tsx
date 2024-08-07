@@ -7,7 +7,7 @@ import CustomSelect from '../../common/Select';
 import * as req from '../../class/request';
 import Text from '../../common/Text';
 
-const Index = (_props: any, ref: any) => {
+const OperationLog = (_props: any, ref: any) => {
     const {
         token: { colorPrimary },
     } = theme.useToken();
@@ -115,4 +115,4 @@ const Index = (_props: any, ref: any) => {
     )
 };
 
-export default forwardRef(Index);
+export default forwardRef(OperationLog);

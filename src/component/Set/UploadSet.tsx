@@ -5,7 +5,7 @@ import Title from '../../common/Title';
 import * as req from '../../class/request';
 import type { FormInstance } from 'antd/es/form';
 
-const Index = (_props: any, ref: any) => {
+const UploadSet = (_props: any, ref: any) => {
     const { message } = App.useApp();
     const [info, setInfo] = useState<any>({
         qiniu: {},
@@ -137,7 +137,7 @@ const Index = (_props: any, ref: any) => {
                     <Form.Item label='使用状态' name={['qiniu', 'visible']} className='paddh' valuePropName='checked'>
                         <Switch checkedChildren='开启' unCheckedChildren='关闭' />
                     </Form.Item>
-                    <div className='paddh flex flex_end paddb20' style={{ marginTop: 80 }}>
+                    <div className='paddh flexSelf flex_end paddb20' style={{ marginTop: 80 }}>
                         <Button type='primary' className='huibtn marginr12' onClick={() => reset('qiniu')}>重置</Button>
                         <Button type='primary' htmlType='submit'>保存</Button>
                     </div>
@@ -170,7 +170,7 @@ const Index = (_props: any, ref: any) => {
                     <Form.Item label='使用状态' name={['alioss', 'visible']} className='paddh' valuePropName='checked'>
                         <Switch checkedChildren='开启' unCheckedChildren='关闭' />
                     </Form.Item>
-                    <div className='paddh flex flex_end paddb20'>
+                    <div className='paddh flexSelf flex_end paddb20'>
                         <Button type='primary' className='huibtn marginr12' onClick={() => reset('alioss')}>重置</Button>
                         <Button type='primary' htmlType='submit'>保存</Button>
                     </div>
@@ -202,7 +202,7 @@ const Index = (_props: any, ref: any) => {
                     <Form.Item label='使用状态' name={['txcos', 'visible']} className='paddh' valuePropName='checked'>
                         <Switch checkedChildren='开启' unCheckedChildren='关闭' />
                     </Form.Item>
-                    <div className='paddh flex flex_end paddb20'>
+                    <div className='paddh flexSelf flex_end paddb20'>
                         <Button type='primary' className='huibtn marginr12' onClick={() => reset('txcos')}>重置</Button>
                         <Button type='primary' htmlType='submit'>保存</Button>
                     </div>
@@ -218,7 +218,7 @@ const Index = (_props: any, ref: any) => {
                     <Form.Item label='使用状态' name={['local', 'visible']}  className='paddh' valuePropName='checked'>
                         <Switch checkedChildren='开启' unCheckedChildren='关闭' />
                     </Form.Item>
-                    <div className='paddh flex flex_end paddb20'>
+                    <div className='paddh flexSelf flex_end paddb20'>
                         <Button type='primary' className='huibtn marginr12' onClick={() => reset('local')}>重置</Button>
                         <Button type='primary' htmlType='submit'>保存</Button>
                     </div>
@@ -228,4 +228,4 @@ const Index = (_props: any, ref: any) => {
     )
 };
 
-export default forwardRef(Index);
+export default forwardRef(UploadSet);

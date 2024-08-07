@@ -1,13 +1,12 @@
-import React, { useImperativeHandle, forwardRef, useRef, useState,useEffect } from 'react';
-import { Button, Input, theme, App,Select, Switch,Image} from 'antd';
+import React, { useImperativeHandle, forwardRef, useRef, useState, useEffect } from 'react';
+import { Button, Input, theme, App, Select, Switch, Image } from 'antd';
 import Title from '../../common/Title';
 import CustomTable from '../../common/Table';
 import CustomModal from '../../common/Modal';
 import CustomSelect from '../../common/Select';
 import * as req from '../../class/request';
-import AddGoods from './AddGoods';
 
-const Index = (_props: any, ref: any) => {
+const Goods = (_props: any, ref: any) => {
 	const {
 		token: { colorPrimary },
 	} = theme.useToken();
@@ -33,7 +32,7 @@ const Index = (_props: any, ref: any) => {
 			title: '商品图',
 			align: 'center',
 			dataIndex: 'img',
-			render:(img:any)=>{
+			render: (img: any) => {
 				return <Image width={30} src={img} />
 			}
 		}, {
@@ -50,9 +49,9 @@ const Index = (_props: any, ref: any) => {
 			title: '状态',
 			align: 'center',
 			dataIndex: 'display',
-			render:(display:string)=>{
-				return(
-					<Switch checkedChildren="上架" unCheckedChildren="下架" defaultChecked={display=="1"} disabled />
+			render: (display: string) => {
+				return (
+					<Switch checkedChildren="上架" unCheckedChildren="下架" defaultChecked={display == "1"} disabled />
 				);
 			}
 		}, {
@@ -77,7 +76,7 @@ const Index = (_props: any, ref: any) => {
 	]
 	useEffect(() => {
 		refresh()
-	}, [display,name])
+	}, [display, name])
 	useImperativeHandle(ref, () => ({
 		refresh,
 	}))
@@ -136,31 +135,30 @@ const Index = (_props: any, ref: any) => {
 							setWords(e.target.value || '');
 						}}
 					/>
-					
-					 <Select
-                    placeholder='请选择上架状态'
-					style={{ width: 150 }}
-					className='borderbai marginr12'
-					allowClear
-					onChange={(display: number) => {
-						console.log(display)
-						if(display===undefined)
-						{
-							display=-1;
-						}
-						setDisplay(display)
-					}}
-                    options={[
-                        {
-                        value: 1,
-                        label: '上架',
-                        },
-                        {
-                        value: 0,
-                        label: '下架',
-                        }
-                    ]}
-                    />
+
+					<Select
+						placeholder='请选择上架状态'
+						style={{ width: 150 }}
+						className='borderbai marginr12'
+						allowClear
+						onChange={(display: number) => {
+							console.log(display)
+							if (display === undefined) {
+								display = -1;
+							}
+							setDisplay(display)
+						}}
+						options={[
+							{
+								value: 1,
+								label: '上架',
+							},
+							{
+								value: 0,
+								label: '下架',
+							}
+						]}
+					/>
 					<Button type="primary" onClick={() => {
 						setOpen(true);
 					}}>添加商品</Button>
@@ -175,20 +173,9 @@ const Index = (_props: any, ref: any) => {
 					/>
 				</div>
 			</div>
-			{/* 添加/编辑 */}
-			<CustomModal
-				open={open}
-				width={800}
-				onCancel={onCancel}
-				title={(<Title title={`${type === 'edit' ? '编辑' : '添加'}商品`} />)}
-			>
-				<AddGoods type={type} data={row} onOk={()=>{
-					setOpen(false);
-					refresh()
-				}} />
-			</CustomModal>
+
 		</React.Fragment>
 	)
 };
 
-export default forwardRef(Index);
+export default forwardRef(Goods);

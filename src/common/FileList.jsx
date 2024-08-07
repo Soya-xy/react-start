@@ -50,19 +50,19 @@ function GetItems(props) {
             {/* 图片 */}
             {item.type == 1 && <ImageDemo data={item} />}
             {/* 视频 */}
-            {item.type == 2 && <img className='wj' alt='' src={require('../imgs/shipin.png')} />}
+            {item.type == 2 && <img className='wj' alt='' src={new URL('../imgs/shipin.png', import.meta.url).href} />}
             {/* excel文件 */}
-            {item.type == 3 && <img className='wj' alt='' src={require('../imgs/excel.png')} />}
+            {item.type == 3 && <img className='wj' alt='' src={new URL('../imgs/excel.png', import.meta.url).href} />}
             {/* word文件 */}
-            {item.type == 4 && <img className='wj' alt='' src={require('../imgs/word.png')} />}
+            {item.type == 4 && <img className='wj' alt='' src={new URL('../imgs/word.png', import.meta.url).href} />}
             {/* pdf文件 */}
-            {item.type == 5 && <img className='wj' alt='' src={require('../imgs/PDF.png')} />}
+            {item.type == 5 && <img className='wj' alt='' src={new URL('../imgs/PDF.png', import.meta.url).href} />}
             {/* 压缩包文件 */}
-            {item.type == 6 && <img className='wj' alt='' src={require('../imgs/ysb.png')} />}
+            {item.type == 6 && <img className='wj' alt='' src={new URL('../imgs/ysb.png', import.meta.url).href} />}
             {/* 未知文件 */}
-            {item.type == 7 && <img className='wj' alt='' src={require('../imgs/other.png')} />}
+            {item.type == 7 && <img className='wj' alt='' src={new URL('../imgs/other.png', import.meta.url).href} />}
             {/* 虚拟文件夹 */}
-            {item.type == 8 && <img className='wj' alt='' src={require('../imgs/wjj.png')} title='双击打开文件夹' />}
+            {item.type == 8 && <img className='wj' alt='' src={new URL('../imgs/wjj.png', import.meta.url).href} title='双击打开文件夹' />}
         </React.Fragment>
     )
 }

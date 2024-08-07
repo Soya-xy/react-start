@@ -7,7 +7,7 @@ import AddMenu from './AddMenu';  // 添加、编辑菜单
 
 const levelTxt = ['', '一级菜单', '二级菜单', '三级菜单']
 
-const Index = (_props: any, ref: any) => {
+const MenuSet = (_props: any, ref: any) => {
 	const { message, modal } = App.useApp();
 	const {
 		token: { colorPrimary, colorWarning, colorError, colorSuccess },
@@ -206,7 +206,7 @@ const Index = (_props: any, ref: any) => {
 					<Title title='菜单管理' />
 					{/* 菜单列表 */}
 					<div className='pubList margl24 margr24 menuListbox customScrollbar'>
-						<div className='head flex'>
+						<div className='head flexSelf'>
 							<p className='flexAllCenter cursor' style={{ width: 90 }}>
 								序号
 							</p>
@@ -221,7 +221,7 @@ const Index = (_props: any, ref: any) => {
 						{list.map((item, index) => (
 							<div key={String(index)}>
 								{/* 一级 */}
-								<div className='flex'>
+								<div className='flexSelf'>
 									<p className='flexAllCenter cursor' style={{ width: 90 }}>{index + 1}</p>
 									<div className='row2 flexCenter paddleft98'>
 										{item.child.length > 0 && <span className={`iconfont icon-jiantou-shang sjx ${item.open ? 'xia' : ''}`} onClick={() => openMenu(index)}></span>}
@@ -234,7 +234,7 @@ const Index = (_props: any, ref: any) => {
 									{item.child.map((row: any, k: number) => (
 										<div key={String(k)} className={`sec ${item.open ? 'open' : ''}`} style={{ height: row.open && item.open && (row.child.length + 1) * 54 }}>
 											{/* 二级 */}
-											<div className='flex'>
+											<div className='flexSelf'>
 												<p className='flexAllCenter cursor' style={{ width: 90 }}>{k + 1}</p>
 												<div className='row2 flexCenter paddleft98'>
 													{row.child.length > 0 && <span className={`iconfont icon-jiantou-shang sjx ${row.open ? 'xia' : ''}`} onClick={() => openMenu(index, k)} style={{ marginLeft: row.child.length > 0 ? 20 : '' }}></span>}
@@ -245,7 +245,7 @@ const Index = (_props: any, ref: any) => {
 											</div>
 											{row.child && <div className={`three ${row.open ? 'open' : ''}`} style={{ height: row.open ? row.child.length * 54 : '0' }}>
 												{row.child.map((r: any, i: number) => (
-													<div className='flex' key={String(i)}>
+													<div className='flexSelf' key={String(i)}>
 														<p className='flexAllCenter cursor' style={{ width: 90 }}>{i + 1}</p>
 														<div className='row2 flexCenter paddleft98'>
 															{r.child.length > 0 && <span className={`iconfont icon-jiantou-shang sjx ${r.open ? 'xia' : ''}`} onClick={() => openMenu(index, k, i)}></span>}
@@ -299,4 +299,4 @@ const Index = (_props: any, ref: any) => {
 	)
 };
 
-export default forwardRef(Index);
+export default forwardRef(MenuSet);
