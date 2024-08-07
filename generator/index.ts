@@ -1,18 +1,22 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { join, sep } from 'node:path'
 import type { Plugin } from 'vite'
-import { templateModalVue, templateVue } from './const'
+import {  templateVue } from './const'
+import { templateAdd } from './model'
 
 export interface Fields {
   type: string
   name: string
   value: string
+  search?: number
 }
 
 export interface GeneratorVueOptions {
   menuname: string
   filename: string
   path: string
+  listApi: string
+  curdApi: string
   field: Fields[]
 }
 
@@ -29,15 +33,15 @@ export default function generator(): Plugin {
         }
 
         const content = templateVue(e)
-        const modal = templateModalVue(e)
+        const modal  = templateAdd(e)
         try {
           writeFileSync(join(filePath, `${e.filename}.tsx`), content)
           writeFileSync(join(filePath, 'Add.tsx'), modal)
-          server.ws.send('generator:vue', { success: true })
+          server.ws.send('generator:over', { success: true })
         }
         catch (error) {
           console.error(error)
-          server.ws.send('generator:vue', { error })
+          server.ws.send('generator:over', { error })
         }
       })
     },

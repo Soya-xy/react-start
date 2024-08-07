@@ -1,32 +1,50 @@
-import JSON5 from 'json5'
 import type { GeneratorVueOptions } from './'
 
 export function templateVue(item: GeneratorVueOptions) {
-  let haveSwitch = false
+
+  const needSearch: any[] = []
+
   const columns: any = item.field.map((field) => {
-    if (field.type === 'switch') {
-      haveSwitch = true
+    if (field.search) {
+      needSearch.push(field)
     }
-    return `
-    {
-      title: "${field.name}",
-      dataIndex: "${field.value}",
-      filterable:filterable('${field.name}', '${field.value}')
-      ${field.type === 'switch'
-        ? `render({ ${field.value} }:any){
-            return h(Switch, {
-                checked: ${field.value},
-                disabled: true,
-              })
-          }`
-        : ''}
+    switch (field.type) {
+      case 'switch':
+        return `
+        {
+          title: "${field.name}",
+          dataIndex: "${field.value}",
+          render: (${field.value}: number) => {
+            return ${field.value} == 0 ? (<Tag color="gold">否</Tag>) : (<Tag color="red-inverse">是</Tag>);
+          }
+        }
+        `
+      case 'image':
+        return `
+        {
+          title: "${field.name}",
+          dataIndex: "${field.value}",
+          render({ ${field.value} }:string){
+            <Image
+              width={60}
+              src={${field.value}}
+            />
+          }
+        }`
+      default:
+        return `
+        {
+          title: "${field.name}",
+          align: 'center',
+          dataIndex: "${field.value}",
+        }
+        `
     }
-    `
   })
   const constName = item.filename.charAt(0).toUpperCase() + item.filename.slice(1)
   return `
   import React, { useImperativeHandle, forwardRef, useRef, useState, useEffect } from 'react';
-import { Button, theme, App,  Input } from 'antd';
+import { Button, theme, App,  Input,Image,Tag,DatePicker,Select } from 'antd';
 import Title from '~/common/Title';
 import CustomTable from '~/common/Table';
 import CustomModal from '~/common/Modal';
@@ -41,7 +59,20 @@ const Index = (_props: any, ref: any) => {
   const [open, setOpen] = useState<boolean>(false);
   const [row, setRow] = useState<any>({});
   const [type, setType] = useState<string>('');
-  const [username, setUserName] = useState<string>('');
+  ${needSearch.map((field) => {
+    if (field.type === 'datetime') {
+      return `
+          const [startTime, setStartTime] = useState<string>('');
+          const [endTime, setEndTime] = useState<string>('');
+
+          const { RangePicker } = DatePicker;
+      `
+    }
+    else {
+      return `const [${field.value}, set${field.value.charAt(0).toUpperCase() + field.value.slice(1)}] = useState<any>();`
+    }
+  }).join('\n')}
+
   // 列表
   const columns = [
     {
@@ -50,6 +81,7 @@ const Index = (_props: any, ref: any) => {
       dataIndex: 'id',
       width: 90,
     },
+    ${columns},
     {
       title: '操作',
       dataIndex: 'id',
@@ -68,7 +100,12 @@ const Index = (_props: any, ref: any) => {
   ]
   useEffect(() => {
     refresh()
-  }, [username])
+  }, ${needSearch.map((field) => {
+    if (field.type === 'datetime') {
+      return `startTime,endTime`
+    } else
+      return `${field.value}`
+  })}
   useImperativeHandle(ref, () => ({
     refresh,
   }))
@@ -77,7 +114,7 @@ const Index = (_props: any, ref: any) => {
   }
   // 获取列表数据
   const getList = (info: any, callback: any) => {
-    req.post('config/chargeConfigList', {
+    req.post('${item.listApi}', {
       page: info.page,
       size: info.size,
       orderBy: 'desc',
@@ -102,7 +139,7 @@ const Index = (_props: any, ref: any) => {
       centered: true,
       maskClosable: true,
       onOk: () => {
-        req.post('config/delChargeConfig', { id: data.id }).then(res => {
+        req.post('${item.curdApi.replace(/%/, 'del')}', { id: data.id }).then(res => {
           if (res.code == 1) {
             refresh()
           } else {
@@ -116,22 +153,66 @@ const Index = (_props: any, ref: any) => {
     <React.Fragment>
       <div className='h100 flexColumn'>
         <div className='flwp'>
-          <Input
+          
+          ${needSearch.map((field) => {
+    if (field.type === 'switch') {
+      return `
+                    <Select
+                    className='pubInpt borderbai marginr12'
+                    placeholder='请选择${field.name}'
+                    allowClear
+                    options={[
+                      { value: 1, label: '是' },
+                      { value: 0, label: '否' },
+                    ]}
+                    onChange={(value) => {
+                      set${field.value.charAt(0).toUpperCase() + field.value.slice(1)}(value);
+                    }
+                    }>
+                  </Select>
+                  `
+
+    } else if (field.type === 'datetime') {
+      return `
+          <RangePicker
+            showTime
+            format="YYYY-MM-DD HH:mm:ss"
             className='pubInpt borderbai marginr12'
-            prefix={(<span className='iconfont icon-sousuo marginr4'></span>)}
-            placeholder='请输入姓名'
-            allowClear
-            onChange={(e) => {
-              setUserName(e.target.value || '');
+            style={{
+              width: '340px'
             }}
-          />
+            onChange={(e) => {
+              if (Array.isArray(e) && e?.length > 0) {
+                let time = e
+                setStartTime(time[0]!.format('YYYY-MM-DD HH:mm:ss'));
+                setEndTime(time[1]!.format('YYYY-MM-DD HH:mm:ss'));
+              }else{
+                setStartTime('')
+                setEndTime('')
+              }
+            }}
+          />`
+    } else {
+      return `
+                    <Input
+                    className='pubInpt borderbai marginr12'
+                    prefix={(<span className='iconfont icon-sousuo marginr4'></span>)}
+                    placeholder='请输入${field.name}'
+                    allowClear
+                    onChange={(e) => {
+                      set${field.value.charAt(0).toUpperCase() + field.value.slice(1)}(e.target.value || '');
+                    }}
+                  />
+                  `
+    }
+  }).join('\n')}
 
           <Button type="primary" onClick={() => {
             setOpen(true);
           }}>添加配置</Button>
         </div>
         <div className='bgbai margt20 flex_auto'>
-          <Title title='充值配置' />
+          <Title title='${item.menuname}' />
           <CustomTable
             ref={tableRef}
             columns={columns}
@@ -145,7 +226,7 @@ const Index = (_props: any, ref: any) => {
         open={open}
         width={360}
         onCancel={onCancel}
-        title={(<Title title={`${type === 'edit' ? '编辑' : '添加'}支付方式`} />)}
+        title={(<Title title={\`$\{type === 'edit' ? '编辑' : '添加'}${constName}\`} />)}
       >
         <Add type={type} data={row} onOk={() => {
           setOpen(false);
@@ -160,71 +241,3 @@ export default forwardRef(Index);
 `
 }
 
-export function templateModalVue(item: GeneratorVueOptions) {
-  const columns: any = item.field.map((field) => {
-    return {
-      label: field.name,
-      field: field.value,
-      type: field.type,
-    }
-  })
-  return `
-<script setup lang='ts'>
-const props = defineProps<{
-  type: string
-  data: any
-}>()
-const emit = defineEmits(['ok', 'cancel'])
-const { data } = toRefs(props)
-const form = reactive<any>(data.value || {})
-const fields = ${JSON5.stringify(columns)}
-
-const formRef = ref<any>()
-
-async function handleBeforeOk() {
-  const isValid = await formRef.value.validate()
-  if (!isValid) {
-    Message.success({
-      content: '操作成功',
-      duration: 1500,
-      onClose() {
-        emit('ok', form)
-      },
-    })
-  }
-}
-
-function cancel() {
-  emit('cancel')
-}
-</script>
-
-<template>
-  <a-modal
-    :title="type === 'edit' ? '编辑' : '新增'" unmount-on-close esc-to-close visible
-    @before-ok="handleBeforeOk" @cancel="cancel"
-  >
-    <CommonForm ref="formRef" :data="form" :fields="fields" />
-  </a-modal>
-</template>
-
-`
-}
-
-// 根据类型使用faker生成对应的mock数据
-function getFakerType(type: string) {
-  switch (type) {
-    case 'string':
-      return 'faker.commerce.product()'
-    case 'number':
-      return 'faker.number.float({ min: 100, max: 900, fractionDigits: 3 })'
-    case 'switch':
-      return 'faker.random.boolean()'
-    case 'date':
-      return 'dayjs(faker.date.recent()).format("YYYY-MM-DD HH:mm:ss")'
-    case 'dateTime':
-      return 'dayjs(faker.date.recent()).format("YYYY-MM-DD HH:mm:ss")'
-    default:
-      return 'faker.commerce.product()'
-  }
-}

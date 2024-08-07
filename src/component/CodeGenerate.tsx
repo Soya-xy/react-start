@@ -1,15 +1,23 @@
-import React, { forwardRef, } from 'react';
+import React, { forwardRef, useEffect, } from 'react';
 import { Button, Input, Form, Space, Divider, Select } from 'antd';
 import Title from '~/common/Title';
-import { PlusOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined } from '@ant-design/icons';
 
 const CodeGenerate = (_props: any, ref: any) => {
 
-  function onFinish(values: any) {
+  useEffect(() => {
+    if (import.meta.hot)
+      import.meta.hot.on('generator:over', e => {
+        console.log("🚀 ~ useEffect ~ e:", e)
+      })
+  }, [])
+
+  async function onFinish(values: any) {
     console.log('Received values:', values);
 
     if (import.meta.hot) {
-      import.meta.hot.send('generator:react', values)
+      const d = await import.meta.hot.send('generator:react', values)
+      console.log("🚀 ~ onFinish ~ d:", d)
     }
   }
 
@@ -39,51 +47,73 @@ const CodeGenerate = (_props: any, ref: any) => {
               >
                 <Input placeholder="文件名称" />
               </Form.Item>
+              <Form.Item
+                name="listApi"
+                label="列表接口地址（eg: config/%Config ）"
+                rules={[{ required: true, }]}
+              >
+                <Input placeholder="接口地址" />
+              </Form.Item>
+              <Form.Item
+                name="curdApi"
+                label="CURD接口地址"
+                rules={[{ required: true, }]}
+              >
+                <Input placeholder="接口地址" />
+              </Form.Item>
               <Title title='字段配置' />
               <Form.List name="field">
                 {(fields, { add, remove }) => (
                   <>
                     {fields.map(({ key, name, ...restField }: any) => (
-                      <div key={key} className="flex-col">
-                        <Form.Item
-                          {...restField}
-                          name={[key, 'name']}
-                          label="字段名称"
-                        >
-                          <Input placeholder="字段名称" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[key, 'value']}
-                          label="字段值"
-                        >
-                          <Input placeholder="字段值" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[key, 'search']}
-                          label="是否搜索"
-                        >
-                          <Select defaultValue={0} options={[
-                            { value: 1, label: '是' },
-                            { value: 0, label: '否' },
-                          ]} />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[key, 'type']}
-                          label="文件名称"
-                        >
-                          <Select defaultValue="text" options={[
-                            { value: 'text', label: '文字' },
-                            { value: 'number', label: '数字' },
-                            { value: 'datetime', label: '日期时间' },
-                            { value: 'switch', label: '开关' },
-                            { value: 'image', label: '图片' },
-                            { value: 'tag', label: '标签' }
-                          ]} />
-                        </Form.Item>
-                        <Divider />
+                      <div key={key} className="flex w-full justify-between items-center gap-3">
+                        <div className='flex-col flex-1'>
+                          <Form.Item
+                            {...restField}
+                            name={[key, 'name']}
+                            label="字段名称"
+                          >
+                            <Input placeholder="字段名称" />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            name={[key, 'value']}
+                            label="字段值"
+                          >
+                            <Input placeholder="字段值" />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            name={[key, 'search']}
+                            label="是否搜索"
+                          >
+                            <Select defaultValue={0} options={[
+                              { value: 1, label: '是' },
+                              { value: 0, label: '否' },
+                            ]} />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            name={[key, 'type']}
+                            label="文件名称"
+                          >
+                            <Select defaultValue="text" options={[
+                              { value: 'text', label: '文字' },
+                              { value: 'number', label: '数字' },
+                              { value: 'datetime', label: '日期时间' },
+                              { value: 'switch', label: '开关' },
+                              { value: 'image', label: '图片' },
+                            ]} />
+                          </Form.Item>
+                          <Divider />
+                        </div>
+                        {fields.length > 1 ? (
+                          <div
+                            className='iconfont i-carbon:task-remove'
+                            onClick={() => remove(name)}
+                          />
+                        ) : null}
+
                       </div>
                     ))}
                     <Form.Item>
