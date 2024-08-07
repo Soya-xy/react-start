@@ -6,6 +6,7 @@ import { MinusCircleOutlined } from '@ant-design/icons';
 const CodeGenerate = (_props: any, ref: any) => {
 
   useEffect(() => {
+    import.meta.hot.send('generator:react', {"menuname":"测试","filename":"Test","listApi":"config/getConfig","curdApi":"config/%Config","field":[{"name":"测试ID","value":"id"}]})
     if (import.meta.hot)
       import.meta.hot.on('generator:over', e => {
         console.log("🚀 ~ useEffect ~ e:", e)
@@ -13,10 +14,10 @@ const CodeGenerate = (_props: any, ref: any) => {
   }, [])
 
   async function onFinish(values: any) {
-    console.log('Received values:', values);
 
     if (import.meta.hot) {
-      const d = await import.meta.hot.send('generator:react', values)
+      const d = await import.meta.hot.send('generator:react', {"menuname":"测试","filename":"Test","listApi":"config/getConfig","curdApi":"config/%Config","field":[{"name":"测试ID","value":"id"}]})
+      // const d = await import.meta.hot.send('generator:react', values)
       console.log("🚀 ~ onFinish ~ d:", d)
     }
   }

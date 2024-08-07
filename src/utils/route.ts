@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 
-const routes = [
+export const routes = [
   { name: 'AdminList', path: lazy(() => import('~C/Basic/AdminList')) },
   { name: 'RoleList', path: lazy(() => import('~C/Basic/RoleList')) },
   { name: 'BasicInfo', path: lazy(() => import('~C/Set/BasicInfo')) },
@@ -9,7 +9,8 @@ const routes = [
   { name: 'OperationLog', path: lazy(() => import('~C/Set/OperationLog')) },
   { name: 'Goods', path: lazy(() => import('~C/Goods/Goods')) },
   { name: 'Orders', path: lazy(() => import('~C/Goods/Orders')) },
-  { name: 'CodeGenerate', path: lazy(() => import('~C/CodeGenerate')) }
+  { name: 'CodeGenerate', path: lazy(() => import('~C/CodeGenerate')) },
+  // TODO: add your route here
 ]
 
 export const Components = () => {
