@@ -1,10 +1,10 @@
 
-  import React, { useImperativeHandle, forwardRef, useRef, useState, useEffect } from 'react';
-import { Button, theme, App,  Input,Image,Tag,DatePicker,Select } from 'antd';
-import Title from '~/common/Title';
-import CustomTable from '~/common/Table';
-import CustomModal from '~/common/Modal';
+  import { App,  Button, DatePicker,Image,Input,Select, Tag,theme } from 'antd';
+import React, { useImperativeHandle, forwardRef, useRef, useState, useEffect } from 'react';
 import * as req from '~/class/request';
+import CustomModal from '~/common/Modal';
+import CustomTable from '~/common/Table';
+import Title from '~/common/Title';
 import Add from './Add';
 const Index = (_props: any, ref: any) => {
   const {
@@ -48,12 +48,11 @@ const Index = (_props: any, ref: any) => {
       )
     }
   ]
-  useEffect(() => {
-    refresh()
-  }, 
+
   useImperativeHandle(ref, () => ({
-    refresh,
+    refresh
   }))
+
   const refresh = () => {
     tableRef.current.onRefresh()
   }

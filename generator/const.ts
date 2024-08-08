@@ -98,14 +98,24 @@ const Index = (_props: any, ref: any) => {
       )
     }
   ]
-  useEffect(() => {
-    refresh()
-  }, ${needSearch.map((field) => {
-    if (field.type === 'datetime') {
-      return `startTime,endTime`
-    } else
-      return `${field.value}`
-  })}
+
+  
+  ${needSearch.length > 0 ? `
+      useEffect(() => {
+        refresh()
+      }, ${needSearch.map((field) => {
+          if (field.type === 'datetime') {
+            return 'startTime,endTime'
+          } else {
+            return field.value
+          }
+        })}
+    `: ''
+    }
+
+
+
+
   useImperativeHandle(ref, () => ({
     refresh,
   }))
@@ -155,8 +165,8 @@ const Index = (_props: any, ref: any) => {
         <div className='flwp'>
           
           ${needSearch.map((field) => {
-    if (field.type === 'switch') {
-      return `
+      if (field.type === 'switch') {
+        return `
                     <Select
                     className='pubInpt borderbai marginr12'
                     placeholder='请选择${field.name}'
@@ -172,8 +182,8 @@ const Index = (_props: any, ref: any) => {
                   </Select>
                   `
 
-    } else if (field.type === 'datetime') {
-      return `
+      } else if (field.type === 'datetime') {
+        return `
           <RangePicker
             showTime
             format="YYYY-MM-DD HH:mm:ss"
@@ -192,8 +202,8 @@ const Index = (_props: any, ref: any) => {
               }
             }}
           />`
-    } else {
-      return `
+      } else {
+        return `
                     <Input
                     className='pubInpt borderbai marginr12'
                     prefix={(<span className='iconfont icon-sousuo marginr4'></span>)}
@@ -204,8 +214,8 @@ const Index = (_props: any, ref: any) => {
                     }}
                   />
                   `
-    }
-  }).join('\n')}
+      }
+    }).join('\n')}
 
           <Button type="primary" onClick={() => {
             setOpen(true);
