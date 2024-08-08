@@ -10,7 +10,27 @@ export const routes = [
   { name: 'Goods', path: lazy(() => import('~C/Goods/Goods')) },
   { name: 'Orders', path: lazy(() => import('~C/Goods/Orders')) },
   { name: 'CodeGenerate', path: lazy(() => import('~C/CodeGenerate')) },
-  // TODO: add your route here
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+  { name: 'Test', path: lazy(() => import('~C/Test/Test')) },
+// TODO: add your route here
 ]
 
 export const Components = () => {
