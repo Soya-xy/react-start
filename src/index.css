@@ -275,3 +275,7 @@ code {
 /* 上传配置 */
 .uploadBox{height: 100%;align-content: flex-start;overflow: auto;}
 .uploadBox::-webkit-scrollbar{display: none;}
+
+
+
+.userInfoItem .ant-form-item-row { align-items: center;}

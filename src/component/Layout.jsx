@@ -11,6 +11,7 @@ import SetColor from './SetColor';  //主题配色
 // loading页
 import Loading from './Loading';
 import { Components } from '~/utils/route';
+import Notice from './Notice';
 
 
 
@@ -30,7 +31,7 @@ let rootSubmenuKeys = [];
 
 let tabRef = [];
 
-const menuList  = Components();
+const menuList = Components();
 
 const list = (path, id) => {
     var MyComponentt = menuList[path];
@@ -57,6 +58,7 @@ const Index = () => {
         avatar: new URL('../imgs/default.png', import.meta.url).href,
         username: '', systemName: '中软互联管理后台'
     })
+    const [noticeVisible, setNoticeVisible] = useState(false);  // 公告弹出层
     const [username, setUsername] = useState('');
     const [avatar, setAvatar] = useState('');
     const [sysName, setSysName] = useState('中软互联管理后台');
@@ -70,6 +72,14 @@ const Index = () => {
         key: '2',
         label: (
             <p onClick={() => setInfoVisible(true)}>个人信息</p>
+        )
+    }, {
+        key: '4',
+        label: (
+            <div onClick={() => setNoticeVisible(true)} className='flex justify-between'>
+                <p>公告</p>
+                <div className='bg-red-600 rounded-full w-20px h-20px flex text-white items-center justify-center'>1</div>
+            </div>
         )
     }, {
         key: '3',
@@ -135,7 +145,7 @@ const Index = () => {
                 rootSubmenuKeys = [];
                 for (let i in menus) {
                     let child = menus[i].child;
-                    if (child.length > 0) {
+                    if (child?.length > 0) {
                         rootSubmenuKeys.push(String(menus[i].id))
                         let c_menu = [];
                         for (let j in child) {
@@ -306,6 +316,7 @@ const Index = () => {
         setPwdVisible(false);
         setInfoVisible(false);
         setThemeVisible(false);
+        setNoticeVisible(false);
     }
     return (
         <Layout style={{ minHeight: '100vh' }}>
@@ -351,7 +362,7 @@ const Index = () => {
                         </Dropdown>
                     </div>
                 </Header>
-                <Content style={{ padding: 24 }}>
+                <Content style={{ padding: 24 }} className='mainContent'>
                     <Tabs
                         className='asdTabs'
                         items={tabs}
@@ -379,10 +390,25 @@ const Index = () => {
             <CustomModal
                 open={infoVisible}
                 title={(<Title title='个人信息' />)}
+                width='100%'
+                onCancel={onCancel}
+                maskClosable={false}
+            >
+                <UserInfo data={info} onOk={() => {
+                    onCancel();
+                    getData()
+                }}
+                    onCancel={onCancel}
+                />
+            </CustomModal>
+            {/* 公告 */}
+            <CustomModal
+                open={noticeVisible}
+                title={(<Title title='公告' />)}
                 width={360}
                 onCancel={onCancel}
             >
-                <UserInfo data={info} onOk={() => {
+                <Notice data={info} onOk={() => {
                     onCancel();
                     getData()
                 }} />
