@@ -14,8 +14,8 @@ export function templateVue(item: GeneratorVueOptions) {
         {
           title: "${field.name}",
           dataIndex: "${field.value}",
-          render: (${field.value}: number) => {
-            return ${field.value} == 0 ? (<Tag color="gold">否</Tag>) : (<Tag color="red-inverse">是</Tag>);
+          render: (${field.value}: string) => {
+            return ${field.value} == 'o' ? (<Tag color="gold">否</Tag>) : (<Tag color="blue">是</Tag>);
           }
         }
         `
@@ -103,13 +103,13 @@ const Index = (_props: any, ref: any) => {
   ${needSearch.length > 0 ? `
       useEffect(() => {
         refresh()
-      }, ${needSearch.map((field) => {
+      }, [${needSearch.map((field) => {
           if (field.type === 'datetime') {
             return 'startTime,endTime'
           } else {
             return field.value
           }
-        })}
+        })}])
     `: ''
     }
 
@@ -128,6 +128,9 @@ const Index = (_props: any, ref: any) => {
       page: info.page,
       size: info.size,
       orderBy: 'desc',
+      ${needSearch.map((field) => {
+        return `${field.value},`
+      })}
     }).then(res => {
       callback(res)
     })

@@ -39,55 +39,54 @@ const CodeGenerate = (_props: any, ref: any) => {
 			}
 		});
 
-		if (import.meta.hot) {
-			// import.meta.hot.send('generator:react', { "menuname": "测试",
-			//    "filename": "Test", "listApi": "config/getConfig", "curdApi": "config/%Config", "field": [{ "name": "测试ID", "value": "id" }] })
+	});
 
-			import.meta.hot.on("generator:over", (e) => {
-				if (e.success) {
-					console.log("🚀 ~ useEffect ~ e:", e);
 
-					const parentID = parent[parent.length - 1];
+	if (import.meta.hot) {
+		import.meta.hot.on("generator:over", (e) => {
+			if (e.success) {
+				console.log("🚀 ~ useEffect ~ e:", e);
+
+				const parentID = parent[parent.length - 1];
 
 				const apiMenu = [
-						`/admin/${e.data.curdApi.replace("%", "add")}`,
-						`/admin/${e.data.curdApi.replace("%", "edit")}`,
-						`/admin/${e.data.curdApi.replace("%", "del")}`,
-					];
+					`/admin/${e.data.curdApi.replace("%", "add")}`,
+					`/admin/${e.data.curdApi.replace("%", "edit")}`,
+					`/admin/${e.data.curdApi.replace("%", "del")}`,
+				];
 
-					apiMenu.forEach((item) => {
-						req
-							.post("menu/addMenu", {
-								level: parent.length,
-								icon: "icon-jibenguanli",
-								name: e.data.menuname,
-								path: "",
-								route: item,
-								sort: 1,
-								display: 0,
-								needLog: 1,
-								pid: parentID,
-							})
-							.then((res) => {});
-					});
-
+				apiMenu.forEach((item) => {
 					req
 						.post("menu/addMenu", {
 							level: parent.length,
 							icon: "icon-jibenguanli",
 							name: e.data.menuname,
-							path: e.data.filename,
-							route: `/admin/${e.data.listApi}`,
+							path: "",
+							route: item,
 							sort: 1,
-							display: 1,
-							needLog: 0,
+							display: 0,
+							needLog: 1,
 							pid: parentID,
 						})
-						.then((res) => {});
-				}
-			});
-		}
-	});
+						.then((res) => { });
+				});
+
+				req
+					.post("menu/addMenu", {
+						level: parent.length,
+						icon: "icon-jibenguanli",
+						name: e.data.menuname,
+						path: e.data.filename,
+						route: `/admin/${e.data.listApi}`,
+						sort: 1,
+						display: 1,
+						needLog: 0,
+						pid: parentID,
+					})
+					.then((res) => { });
+			}
+		});
+	}
 
 	async function onFinish(values: any) {
 		if (import.meta.hot) {
