@@ -33,6 +33,7 @@ export default class Index extends React.Component {
                 size: this.state.size,
                 orderBy: this.state.orderBy
             }, (res) => {
+                console.log("🚀 ~ Index ~ getList ~ res:", res)
                 if (res.code == 1) {
                     this.setState({
                         total: res.data.all,
@@ -43,8 +44,13 @@ export default class Index extends React.Component {
                     message.error(res.msg)
                     this.setState({
                         requestLoadingShow: false,
+                        loading: false,
                     })
                 }
+            }, () => {
+                this.setState({
+                    requestLoadingShow: false,
+                })
             })
         })
     }

@@ -13,7 +13,7 @@ import Loading from './Loading';
 import { Components } from '~/utils/route';
 import Notice from './Notice';
 import { useAtom } from 'jotai';
-import { pathAtom } from '~/store/path';
+import { pathAtom, userInfoAtom } from '~/store/path';
 
 
 
@@ -65,6 +65,7 @@ const Index = () => {
     const [username, setUsername] = useState('');
     const [avatar, setAvatar] = useState('');
     const [sysName, setSysName] = useState('中软互联管理后台');
+    const [userInfo, setUserInfo] = useAtom(userInfoAtom);
     // 右侧顶部目录
     const items = [{
         key: '1',
@@ -115,6 +116,7 @@ const Index = () => {
                     username: res.data.username,
                     systemName: res.data.name
                 })
+                setUserInfo(res.data)
                 // let menus = [
                 //     {
                 //         id: 1, title: '基本管理', path: '', icon: 'icon-yonghu', child: [

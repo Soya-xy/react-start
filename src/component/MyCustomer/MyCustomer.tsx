@@ -1,6 +1,6 @@
 
 import React, { useImperativeHandle, forwardRef, useRef, useState, useEffect } from 'react';
-import { Button, theme, App, Input, Image, Tag, DatePicker, Select } from 'antd';
+import { Button, theme, App, Input, Image, Tag, DatePicker, Select, Popover } from 'antd';
 import Title from '~/common/Title';
 import CustomTable from '~/common/Table';
 import CustomModal from '~/common/Modal';
@@ -34,6 +34,9 @@ const Index = (_props: any, ref: any) => {
   const [quota, setQuota] = useState<number>(0);
   const [loan, setLoan] = useState<number>(0);
 
+  function statusNode(value: string) {
+    return value == 'o' ? (<Tag color="gold">未设置</Tag>) : (value == 'n' ? (<Tag color="gold">无</Tag>) : (<Tag color="blue">有</Tag>));
+  }
   // 列表
   const columns = [
     {
@@ -86,6 +89,11 @@ const Index = (_props: any, ref: any) => {
       title: "备注",
       align: 'center',
       dataIndex: "remark",
+      render: (remark: string) => {
+        return <Popover content={remark} trigger="hover">
+          <Button type='link'>查看</Button>
+        </Popover>
+      }
     }
     ,
     {
@@ -98,7 +106,7 @@ const Index = (_props: any, ref: any) => {
       title: "房",
       dataIndex: "is_house",
       render: (is_house: string) => {
-        return is_house == 'o' ? (<Tag color="gold">否</Tag>) : (<Tag color="blue">是</Tag>);
+        return statusNode(is_house)
       }
     }
     ,
@@ -106,7 +114,7 @@ const Index = (_props: any, ref: any) => {
       title: "车",
       dataIndex: "is_car",
       render: (is_car: string) => {
-        return is_car == 'o' ? (<Tag color="gold">否</Tag>) : (<Tag color="blue">是</Tag>);
+        return statusNode(is_car)
       }
     }
     ,
@@ -114,7 +122,7 @@ const Index = (_props: any, ref: any) => {
       title: "保单",
       dataIndex: "is_policy",
       render: (is_policy: string) => {
-        return is_policy == 'o' ? (<Tag color="gold">否</Tag>) : (<Tag color="blue">是</Tag>);
+        return statusNode(is_policy)
       }
     }
     ,
@@ -122,7 +130,7 @@ const Index = (_props: any, ref: any) => {
       title: "公积金",
       dataIndex: "is_fund",
       render: (is_fund: string) => {
-        return is_fund == 'o' ? (<Tag color="gold">否</Tag>) : (<Tag color="blue">是</Tag>);
+        return statusNode(is_fund)
       }
     }
     ,
@@ -141,12 +149,7 @@ const Index = (_props: any, ref: any) => {
       }
     }
     ,
-    {
-      title: "时间",
-      align: 'center',
-      dataIndex: "stime",
-    }
-    ,
+
     {
       title: "来源",
       align: 'center',
@@ -160,6 +163,7 @@ const Index = (_props: any, ref: any) => {
       title: "城市",
       align: 'center',
       dataIndex: "city",
+      width: 200,
     }
     ,
     {
@@ -172,9 +176,18 @@ const Index = (_props: any, ref: any) => {
     }
     ,
     {
+      title: "时间",
+      align: 'center',
+      dataIndex: "stime",
+      width: 200,
+    }
+    ,
+    {
       title: '操作',
       dataIndex: 'id',
       align: 'center',
+      fixed: 'right',
+      width: 150,
       render: (id: number, item: any) => (
         <div className='flexAllCenter pubbtnbox'>
           <p style={{ color: colorPrimary }} onClick={() => {
@@ -215,8 +228,8 @@ const Index = (_props: any, ref: any) => {
       status: status,
       remark: remark,
       no_remark: no_remark,
-      long_type: longType,
-      long_status: longStatus,
+      loan_type: longType,
+      loan_status: longStatus,
       date: date,
       date_section: date_section,
       is_lock: is_lock,
@@ -245,8 +258,9 @@ const Index = (_props: any, ref: any) => {
       centered: true,
       maskClosable: true,
       onOk: () => {
-        req.post('MyCustomer/delCustomer', { id: data.id }).then(res => {
+        req.post('MyCustomer/delMyCustomer', { id: data.id }).then(res => {
           if (res.code == 1) {
+            message.success('删除成功', 1.2);
             refresh()
           } else {
             message.error(res.msg, 1.2);
@@ -258,7 +272,7 @@ const Index = (_props: any, ref: any) => {
   return (
     <React.Fragment>
       <div className='h100 flexColumn'>
-        <div >
+        <div>
           <div className='flex items-center w-full mb-2'>
             <div className='flex items-center  w-full'>
               <div className='mr-2'>客户</div>
@@ -328,9 +342,9 @@ const Index = (_props: any, ref: any) => {
               <Select
                 allowClear
                 options={[
-                  { label: '不限', value: 0 },
-                  { label: '有', value: 1 },
-                  { label: '无', value: 2 },
+                  { label: '不限', value: 'o' },
+                  { label: '有', value: 'y' },
+                  { label: '无', value: 'n' },
                 ]}
                 placeholder='请选择'
                 className=' !w-full flex-1 marginr12'
@@ -366,6 +380,7 @@ const Index = (_props: any, ref: any) => {
               <Select
                 allowClear
                 options={[
+
                   { label: '不锁定', value: 'n' },
                   { label: '锁定', value: 'y' },
                 ]}
@@ -407,6 +422,7 @@ const Index = (_props: any, ref: any) => {
               <Select
                 allowClear
                 options={[
+                  { label: '未设置', value: 'o' },
                   { label: '有', value: 'y' },
                   { label: '无', value: 'n' },
                 ]}
@@ -448,7 +464,7 @@ const Index = (_props: any, ref: any) => {
                   { label: '保单贷', value: 5 },
                 ]}
                 placeholder='请选择'
-                className=' !w-full flex-1 marginr12'
+                className='!w-full flex-1 marginr12'
                 onChange={(value) => {
                   setLoan(value)
                 }}
@@ -458,7 +474,7 @@ const Index = (_props: any, ref: any) => {
 
           <Button type="primary" onClick={() => {
             setOpen(true);
-          }}>添加配置</Button>
+          }}>添加客户</Button>
         </div>
         <div className='bgbai margt20 flex_auto'>
           <Title title='我的客户' />
@@ -466,7 +482,7 @@ const Index = (_props: any, ref: any) => {
             ref={tableRef}
             columns={columns}
             onRefresh={onRefresh}
-            scroll={{ y: window.innerHeight - 368 }}
+            scroll={{ y: window.innerHeight - 368, x: window.innerWidth + 200 }}
           />
         </div>
       </div>

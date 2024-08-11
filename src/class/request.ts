@@ -38,7 +38,7 @@ export const get = (url: string) => {
 };
 
 // POST请求
-export const post = (url: string, data?: any) => {
+export const post = (url: string, data?: any,) => {
     let requrl = Global.httpUrl + url;
     // let requrl = 'https://cqredcross.org.cn/' + url;
     // let requrl = 'https://tongcheng.honghukeji.net/admin/' + url;

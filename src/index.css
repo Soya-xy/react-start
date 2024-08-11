@@ -212,7 +212,7 @@ code {
 .headtop .zhut::after{display: block;content: '';width: 1px;height: 24px;background-color: #EFEFEF;margin: 0 24px;}
 
 .ant-layout.site-layout{position: relative;height: 100vh;}
-.asdTabs .ant-tabs-nav{position: absolute;left: 2px;top: 51px;right: 0;}
+.asdTabs .ant-tabs-nav{position: absolute !important;left: 2px;top: 51px;right: 0;}
 .asdTabs .ant-tabs-nav .ant-tabs-tab{border-bottom: 0;}
 .asdTabs.ant-tabs-top > .ant-tabs-nav::before{display: none;}
 
