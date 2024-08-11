@@ -2,6 +2,7 @@ import { App, Button, Cascader, Form, Input, Radio, Select } from "antd"
 import { forwardRef, useContext, useEffect, useRef, useState } from "react"
 import * as req from '~/class/request';
 import { areaOption } from "~/utils/area";
+import { microLoan } from "~/utils/const";
 import { UserContent } from "~/utils/content";
 
 const Index = () => {
@@ -83,14 +84,7 @@ const Index = () => {
           ]}></Radio.Group>
         </Form.Item>
         <Form.Item name="micro_loan" label="微粒贷" >
-          <Select placeholder="请选择" options={[
-            { label: '无', value: 0 },
-            { label: '1万', value: 1 },
-            { label: '5万', value: 2 },
-            { label: '10万', value: 3 },
-            { label: '30万', value: 4 },
-            { label: '80万', value: 5 },
-          ]}></Select>
+          <Select placeholder="请选择" options={microLoan}></Select>
         </Form.Item>
         <Form.Item name="credit" label="芝麻信用分" >
           <Radio.Group options={[

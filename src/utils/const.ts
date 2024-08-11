@@ -16,12 +16,24 @@ export const customerStatus = [
 ]
 // 贷款类型 1不限 2信用贷 3车抵贷 4合作单 5保单贷
 export const loanType = [
+    { label: '未设置', value: 0 },
     { label: '不限', value: 1 },
     { label: '信用贷', value: 2 },
     { label: '车抵贷', value: 3 },
     { label: '合作单', value: 4 },
     { label: '保单贷', value: 5 },
 ]
+
+// 微粒贷额度
+export const microLoan = [
+    { label: '无', value: 0 },
+    { label: '1万', value: 1 },
+    { label: '5万', value: 2 },
+    { label: '10万', value: 3 },
+    { label: '30万', value: 4 },
+    { label: '80万', value: 5 },
+  ]
+
 
 
 // 1-5星级
