@@ -11,6 +11,9 @@ export const routes = [
   { name: 'Orders', path: lazy(() => import('~C/Goods/Orders')) },
   { name: 'CodeGenerate', path: lazy(() => import('~C/CodeGenerate')) },
   { name: 'MyCustomer', path: lazy(() => import('~C/MyCustomer/MyCustomer')) },
+  { name: 'MyImportant', path: lazy(() => import('~C/MyCustomer/MyImportant')) },
+  { name: 'TeamImportant', path: lazy(() => import('~C/MyCustomer/TeamImportant')) },
+  { name: 'Tag', path: lazy(() => import('~C/Tag/Tag')) },
 // TODO: add your route here
 ]
 

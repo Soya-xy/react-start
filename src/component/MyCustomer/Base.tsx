@@ -14,7 +14,6 @@ const Index = (_props: any) => {
   useEffect(() => {
     req.post('MyCustomer/editInfo', { id: userId, type: 'base' }).then(res => {
       if (res.code === 1) {
-
         formRef.current.setFieldsValue({
           ...res.data,
           stime: res.data.stime ? dayjs(res.data.stime) : null,

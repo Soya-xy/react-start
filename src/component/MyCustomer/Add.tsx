@@ -2,8 +2,6 @@
 import React, { forwardRef, useState } from 'react';
 import { Button, Input, Divider, Menu, Radio, Flex } from 'antd';
 import * as req from '~/class/request';
-import { useAtomValue } from 'jotai';
-import { userInfoAtom } from '~/store/path';
 import Base from './Base';
 import Identity from './Identity';
 import { UserContent } from '~/utils/content';
@@ -14,10 +12,10 @@ import Credit from './Credit';
 import Liabilities from './Liabilities';
 import Need from './Need';
 import All from './All';
+import Note from './Note';
 
 const Index = (_props: any, ref: any) => {
     console.log("🚀 ~ Index ~ _props:", _props)
-    const userInfo = useAtomValue(userInfoAtom);
     const items = _props.type == 'edit' ? [
         { label: '基本信息', key: '1' },
         { label: '身份信息', key: '2' },
@@ -76,42 +74,7 @@ const Index = (_props: any, ref: any) => {
                             <Radio.Button value={1}>客户跟踪</Radio.Button>
                             <Radio.Button value={2}>分配记录</Radio.Button>
                         </Radio.Group>
-                        {item == 1 &&
-                            <div>
-                                <div className='flex items-center gap-2'>
-                                    <h3>ID:{_props.data.id}</h3>
-
-                                    <p>当前跟进人：{userInfo.name}</p>
-                                    {_props.type == 'edit' && <Flex gap="small" wrap>
-                                        <Button type="primary">备忘新增</Button>
-                                        <Button type="primary">标记为重要客户</Button>
-                                        <Button type="primary">加入合作单</Button>
-                                        <Button type="primary">锁定客户</Button>
-                                        <Button type="primary">上一个客户</Button>
-                                        <Button type="primary">下一个客户</Button>
-                                        <Button type="primary" className='!bg-red-500'>加入公共池</Button>
-                                        <Button type="primary" className='!bg-gray-500'>发送邀约短信</Button>
-                                    </Flex>}
-                                </div>
-                                <div className='flex items-center mt-3'>
-                                    <div className='mr-2'>新增记录</div>
-                                    <Input placeholder='请输入' className=' flex-1' />
-                                    <Button type="primary" className='ml3'>确定</Button>
-                                </div>
-                                <div className='flex items-center mt-3'>
-                                    <div className='mr-2'>顾问记录</div>
-                                    <Input.TextArea placeholder='请输入' className='flex-1' autoSize={{ minRows: 3, maxRows: 6 }} />
-                                </div>
-                                <div className='flex items-center mt3'>
-                                    <div className='mr-2'>备忘记录</div>
-                                    <Input.TextArea placeholder='请输入' className='flex-1' autoSize={{ minRows: 3, maxRows: 6 }} />
-                                </div>
-                                <div className='flex items-center mt3'>
-                                    <div className='mr-2'>主管点评</div>
-                                    <Input.TextArea placeholder='请输入' className='flex-1' autoSize={{ minRows: 3, maxRows: 6 }} />
-                                    <Button className='ml3'>回复</Button>
-                                </div>
-                            </div>}
+                        {item == 1 && <Note type={_props.type} data={_props.data} />}
                         {item == 2 && <div>
                             <h3>分配记录</h3>
                         </div>}

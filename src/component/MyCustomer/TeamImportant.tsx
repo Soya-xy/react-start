@@ -39,6 +39,10 @@ const Index = (_props: any, ref: any) => {
   const userId = useAtomValue(userAtom)
 
 
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+  const hasSelected = selectedRowKeys.length > 0;
+
   function statusNode(value: string) {
     return value == 'o' ? (<Tag color="gold">未设置</Tag>) : (value == 'n' ? (<Tag color="gold">无</Tag>) : (<Tag color="blue">有</Tag>));
   }
@@ -65,15 +69,7 @@ const Index = (_props: any, ref: any) => {
         return gender == 'women' ? '女' : '男';
       }
     }
-    ,
-    {
-      title: "星级",
-      align: 'center',
-      dataIndex: "star",
-      render: (star: string) => {
-        return star + '星'
-      }
-    }
+
     ,
     {
       title: "状态",
@@ -81,6 +77,14 @@ const Index = (_props: any, ref: any) => {
       dataIndex: "status",
       render: (status: string) => {
         return customerStatus.find((item: any) => item.value == status)?.label || '';
+      }
+    },
+    {
+      title: "星级",
+      align: 'center',
+      dataIndex: "star",
+      render: (star: string) => {
+        return star + '星'
       }
     }
     ,
@@ -140,37 +144,31 @@ const Index = (_props: any, ref: any) => {
     }
     ,
     {
+      title: "代发",
+      dataIndex: "replace",
+      render: (replace: string) => {
+        return statusNode(replace)
+      }
+    }
+    ,
+    {
       title: "申请额度",
       align: 'center',
       dataIndex: "apply_limit",
-    }
-    ,
-    {
-      title: "贷款类型",
-      align: 'center',
-      dataIndex: "loan_type",
-      render: (loan_type: string) => {
-        return loan_type == '1' ? '不限' : loan_type == '2' ? '信用贷' : loan_type == '3' ? '车抵贷' : loan_type == '4' ? '合作单' : loan_type == '5' ? '保单贷' : '';
-      }
-    }
-    ,
+    },
 
     {
-      title: "来源",
+      title: "实际申请时间",
       align: 'center',
-      dataIndex: "source",
-      render: (source: string) => {
-        return source == '1' ? '后台申请' : '表格导入';
-      }
-    }
-    ,
-    {
-      title: "城市",
-      align: 'center',
-      dataIndex: "city",
+      dataIndex: "stime",
       width: 200,
     }
-    ,
+    , {
+      title: "进系统时间",
+      align: 'center',
+      dataIndex: "atime",
+      width: 200,
+    },
     {
       title: "来源媒体",
       align: 'center',
@@ -178,13 +176,6 @@ const Index = (_props: any, ref: any) => {
       render: (source_media: string) => {
         return source_media == '1' ? '后台申请' : '线下申请';
       }
-    }
-    ,
-    {
-      title: "时间",
-      align: 'center',
-      dataIndex: "stime",
-      width: 200,
     }
     ,
     {
@@ -254,7 +245,7 @@ const Index = (_props: any, ref: any) => {
 
   // 获取列表数据
   const getList = (info: any, callback: any) => {
-    req.post('MyCustomer/MyCustomerList', {
+    req.post('MyCustomer/teamImportant', {
       page: info.page,
       size: info.size,
       orderBy: 'desc',
@@ -294,6 +285,16 @@ const Index = (_props: any, ref: any) => {
   }
 
 
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection: any = {
+    type: 'checkbox',
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
 
   return (
     <React.Fragment>
@@ -498,16 +499,12 @@ const Index = (_props: any, ref: any) => {
                 />
               </div>
             </div>
-
-            <Button type="primary" onClick={() => {
-              setOpen(true);
-            }}>添加客户</Button>
           </div>
           <div className='bgbai margt20 flex_auto'>
-            <Title title='我的客户' />
+            <Title title='团队重要客户' />
             <CustomTable
-
               ref={tableRef}
+              rowSelection={rowSelection}
               columns={columns}
               onRefresh={onRefresh}
               scroll={{ y: window.innerHeight - 368, x: window.innerWidth + 200 }}

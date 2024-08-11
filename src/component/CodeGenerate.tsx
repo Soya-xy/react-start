@@ -25,7 +25,11 @@ const CodeGenerate = (_props: any, ref: any) => {
 	};
 
 	useEffect(() => {
-		req.post("menu/menuList", {}).then((res) => {
+		req.post("menu/menuList", {
+			page: 1,
+			size: 9999,
+			orderBy: '',
+		}).then((res) => {
 			if (res.code === 1) {
 				const menu = res.data.datas.map((item: any) => {
 					return {

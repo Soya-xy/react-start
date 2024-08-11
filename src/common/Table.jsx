@@ -19,6 +19,7 @@ export default class Index extends React.Component {
         }
     }
     componentDidMount() {
+        console.log("🚀 ~ Table ~ componentDidMount ~ this.props.rowSelection:", this.props)
         if (this.props.auto) {
             this.getList()
         }
