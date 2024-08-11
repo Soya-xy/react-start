@@ -7,13 +7,19 @@ const CodeGenerate = (_props: any, ref: any) => {
 	const [list, setList] = useState([] as any[]);
 	const [parent, setParent] = useState([] as any[]);
 	// 递归生成菜单
-	const getTree = (data: any) => {
+	const genTree = (data: any) => {
 		return data.map((item: any) => {
 			if (item.child && item.child.length) {
 				return {
 					value: item.id,
 					label: item.name,
-					children: getTree(item.child),
+					children: [
+						{
+							value: item.id,
+							label: '本级菜单',
+						},
+						...genTree(item.child),
+					],
 				};
 			} else {
 				return {
@@ -23,6 +29,19 @@ const CodeGenerate = (_props: any, ref: any) => {
 			}
 		});
 	};
+
+	// 查找
+	const findMenu = (data: any, path: string) => {
+		let result: any = {}
+		data.forEach((item: any) => {
+			if (item.path === path) {
+				result = item
+			} else {
+				result = findMenu(item.child, path)
+			}
+		})
+		return result
+	}
 
 	useEffect(() => {
 		req.post("menu/menuList", {
@@ -35,66 +54,96 @@ const CodeGenerate = (_props: any, ref: any) => {
 					return {
 						value: item.id,
 						label: item.name,
-						children: getTree(item.child),
+						children: [
+							{
+								value: item.id,
+								label: '本级菜单',
+							},
+							...genTree(item.child)
+						],
 					};
 				});
 				menu.unshift({ value: 0, label: "顶级菜单" });
+
 				setList(menu);
 			}
 		});
-
-	});
+	}, []);
 
 
 	if (import.meta.hot) {
 		import.meta.hot.on("generator:over", (e) => {
 			if (e.success) {
-				console.log("🚀 ~ useEffect ~ e:", e);
 
 				const parentID = parent[parent.length - 1];
 
-				const apiMenu = [
-					`/admin/${e.data.curdApi.replace("%", "add")}`,
-					`/admin/${e.data.curdApi.replace("%", "edit")}`,
-					`/admin/${e.data.curdApi.replace("%", "del")}`,
-				];
+				req.post("menu/menuList", {
+					page: 1,
+					size: 9999,
+					orderBy: '',
+				}).then((res) => {
+					if (res.code === 1) {
+						const item: any = findMenu(res.data.datas, e.data.filename)
+						if (!item.id) {
+							req.post("menu/addMenu", {
+								level: parent.length,
+								icon: "icon-jibenguanli",
+								name: e.data.menuname,
+								path: e.data.filename,
+								route: `/admin/${e.data.listApi}`,
+								sort: 1,
+								display: 1,
+								needLog: 0,
+								pid: parentID,
+							})
+								.then((res) => {
+									if (res.code === 1) {
+										req.post("menu/menuList", {
+											page: 1,
+											size: 9999,
+											orderBy: '',
+										}).then((res) => {
+											if (res.code === 1) {
+												const item: any = findMenu(res.data.datas, e.data.filename)
+												if (item) {
+													const apiMenu = [
+														`/admin/${e.data.curdApi.replace("%", "add")}`,
+														`/admin/${e.data.curdApi.replace("%", "edit")}`,
+														`/admin/${e.data.curdApi.replace("%", "del")}`,
+													];
 
-				apiMenu.forEach((item) => {
-					req
-						.post("menu/addMenu", {
-							level: parent.length,
-							icon: "icon-jibenguanli",
-							name: e.data.menuname,
-							path: "",
-							route: item,
-							sort: 1,
-							display: 0,
-							needLog: 1,
-							pid: parentID,
-						})
-						.then((res) => { });
-				});
+													apiMenu.forEach((menu) => {
+														req
+															.post("menu/addMenu", {
+																level: parent.length,
+																icon: "icon-jibenguanli",
+																name: e.data.menuname,
+																path: "",
+																route: menu,
+																sort: 1,
+																display: 0,
+																needLog: 1,
+																pid: item.id,
+															})
+															.then((res) => { });
+													});
 
-				req
-					.post("menu/addMenu", {
-						level: parent.length,
-						icon: "icon-jibenguanli",
-						name: e.data.menuname,
-						path: e.data.filename,
-						route: `/admin/${e.data.listApi}`,
-						sort: 1,
-						display: 1,
-						needLog: 0,
-						pid: parentID,
-					})
-					.then((res) => { });
+												}
+											}
+										})
+									}
+								});
+						}
+					}
+				})
+
+
 			}
 		});
 	}
 
 	async function onFinish(values: any) {
 		if (import.meta.hot) {
-			// await import.meta.hot.send('generator:react', { "menuname": "测试", "filename": "Test", "listApi": "config/getConfig", "curdApi": "config/%Config", "field": [{ "name": "测试ID", "value": "id" }] })
 			await import.meta.hot.send("generator:react", {
 				...values,
 				parent: parent[parent.length - 1],

@@ -239,7 +239,7 @@ const Index = (_props: any, ref: any) => {
         open={open}
         width={360}
         onCancel={onCancel}
-        title={(<Title title={\`$\{type === 'edit' ? '编辑' : '添加'}${constName}\`} />)}
+        title={(<Title title={\`$\{type === 'edit' ? '编辑' : '添加'}${item.menuname}\`} />)}
       >
         <Add type={type} data={row} onOk={() => {
           setOpen(false);

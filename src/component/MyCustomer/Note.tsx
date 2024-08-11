@@ -8,6 +8,7 @@ import CustomModal from '~/common/Modal';
 import Title from "~/common/Title";
 import { SearchContent } from "~/utils/content";
 import { userAtom } from "~/store/atom";
+import Add from "../Memo/Add";
 
 const Index = (_props: any) => {
   const { message } = App.useApp()
@@ -19,6 +20,7 @@ const Index = (_props: any) => {
   const [base, setBase] = useState<any>({})
   const [user, setUser] = useAtom(userAtom)
   const [tags, setTags] = useState<any>([])
+  const [noteOpen, setNoteOpen] = useState<boolean>(false)
 
   function refresh() {
     req.post('Label/LabelList', {
@@ -85,7 +87,9 @@ const Index = (_props: any) => {
 
         <p>当前跟进人：{userInfo.name}</p>
         {_props.type == 'edit' && <Flex gap="small" wrap>
-          <Button type="primary">备忘新增</Button>
+          <Button type="primary" onClick={() => {
+            setNoteOpen(true)
+          }}>备忘新增</Button>
 
           <Popconfirm title={base.important === 'y' ? '确定取消为重要客户吗？' : '确定标记为重要客户吗？'} onConfirm={() => {
             req.post('MyCustomer/important', { id: _props.data.id }).then((res: any) => {
@@ -144,7 +148,7 @@ const Index = (_props: any) => {
             //   }
             // })
           }}>
-            <Button type="primary" disabled className='!bg-gray-500'>发送邀约短信</Button>
+            <Button type="primary" disabled className='!bg-gray-500 !text-white'>发送邀约短信</Button>
           </Popconfirm>
         </Flex>}
       </div>
@@ -236,6 +240,25 @@ const Index = (_props: any) => {
           <Button type='primary' htmlType='submit' className='marglauto block margt20'>确定</Button>
         </Form>
       </CustomModal>
+
+
+      {/* 添加/编辑备忘 */}
+      <CustomModal
+        open={noteOpen}
+        width={560}
+        onCancel={() => {
+          setNoteOpen(false)
+        }}
+        title={(<Title title={`添加备忘`} />)}
+      >
+        <Add type={'add'} data={{
+          id: _props.data.id
+        }} onOk={() => {
+          setOpen(false);
+          refresh()
+        }} />
+      </CustomModal>
+
     </div>
   )
 }

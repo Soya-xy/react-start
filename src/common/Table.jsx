@@ -14,12 +14,12 @@ export default class Index extends React.Component {
             total: props.total || 0,
             page: props.page || 1,
             size: props.pageSize || 10,
+            dataIndex: props.dataIndex || 'data',
             loading: false,
             orderBy: ""
         }
     }
     componentDidMount() {
-        console.log("🚀 ~ Table ~ componentDidMount ~ this.props.rowSelection:", this.props)
         if (this.props.auto) {
             this.getList()
         }
@@ -34,24 +34,24 @@ export default class Index extends React.Component {
                 size: this.state.size,
                 orderBy: this.state.orderBy
             }, (res) => {
-                console.log("🚀 ~ Index ~ getList ~ res:", res)
-                if (res.code == 1) {
-                    this.setState({
-                        total: res.data.all,
-                        data: this.initData(res.data.datas, res.data.all),
-                        loading: false,
-                    })
+                if (res?.code == 1) {
+                    if (this.state.dataIndex) {
+                        const data = this.state.dataIndex.split('.').reduce((prev, curr) => {
+                            return prev[curr]
+                        }, res)
+                        this.setState({
+                            total: data.all,
+                            data: this.initData(data.datas || data, data.all),
+                            loading: false,
+                        })
+                    }
+
                 } else {
-                    message.error(res.msg)
+                    message.error(res?.msg || '数据异常')
                     this.setState({
                         requestLoadingShow: false,
-                        loading: false,
                     })
                 }
-            }, () => {
-                this.setState({
-                    requestLoadingShow: false,
-                })
             })
         })
     }
@@ -74,7 +74,7 @@ export default class Index extends React.Component {
     render() {
         return (
             <Table
-                className='pubList margl24 margr24 margb20'
+                className='pubList margl24 margr24'
                 loading={this.state.loading}
                 pagination={{
                     position: ["bottomLeft"],
