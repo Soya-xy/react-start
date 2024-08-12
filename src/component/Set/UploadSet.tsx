@@ -63,7 +63,6 @@ const UploadSet = (_props: any, ref: any) => {
         let key = Object.keys(data)[0];
         let obj: any = data[key];
         let url = 'setting/saveLocal';
-        console.log(obj);
         
         if (key === 'qiniu') {
             url = "setting/saveQiniu";
@@ -77,6 +76,7 @@ const UploadSet = (_props: any, ref: any) => {
         } else {
             obj.visible = obj.visible ? 4 : 0;
         }
+
         req.post(url, obj).then(res => {
             if (res.code === 1) {
                 message.success(res.msg, 1.2);

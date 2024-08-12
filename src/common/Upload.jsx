@@ -9,9 +9,9 @@ let key = '';
 
 const Index = (props, _ref) => {
     const { message, modal } = App.useApp();
-    const [action, setAction] = useState('');  // 上传地址
+    const [action, setAction] = useState(httpUrl);  // 上传地址
     const [token, setToken] = useState('');  // 上传token
-    const [type, setType] = useState(1);  // 上传方式  //1--七牛  2--阿里oss  3--腾讯  4--本地服务器
+    const [type, setType] = useState(4);  // 上传方式  //1--七牛  2--阿里oss  3--腾讯  4--本地服务器
     const [fileList, setFileList] = useState(props.fileList || []);  // 上传文件
     const [configInfo, setConfig] = useState({});
 
@@ -21,7 +21,7 @@ const Index = (props, _ref) => {
     function initToken() {
         req.post('setting/getUploadToken', {}).then(res => {
             if (res.code == 1) {
-                let action;
+                let action = httpUrl;
                 if (res.data.visible === 1) {  // 七牛
                     action = 'https://up-z2.qiniup.com';
                 } else if (res.data.visible === 2) {  //阿里oss
@@ -31,9 +31,11 @@ const Index = (props, _ref) => {
                 } else if (res.data.visible == 4) {  // 本地服务器
                     action = httpUrl ;
                 }
+                console.log("🚀 ~ req.post ~ action:", action)
+
                 setAction(action);
                 setToken(res.data.token);
-                setType(res.data.visible);
+                setType(res.data.visible || 4);
                 setConfig(res.data);
             }
         })
@@ -145,6 +147,7 @@ const Index = (props, _ref) => {
                         domain = 4;
                         name = e.file.response.data.name;
                         url = e.file.response.data.url;
+                        console.log(e);
                     } else {  // 上传到cdn
                         domain = configInfo.domain;
                         name = e.file.name;

@@ -1,11 +1,11 @@
 import React, { useImperativeHandle, forwardRef, useRef, useState } from 'react';
 import { App, Button, Image, Switch, theme } from 'antd';
-import Title from '../../common/Title';
-import CustomTable from '../../common/Table';
-import CustomModal from '../../common/Modal';
+import Title from '~/common/Title';
+import CustomTable from '~/common/Table';
+import CustomModal from '~/common/Modal';
 import AddBasic from './AddBasic';  // 添加配置
-import Text from '../../common/Text';
-import * as req from '../../class/request';
+import Text from '~/common/Text';
+import * as req from '~/class/request';
 
 // const typeList = [
 // 	{ value: 1, label: '文本' },

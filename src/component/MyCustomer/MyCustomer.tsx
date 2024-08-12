@@ -10,6 +10,7 @@ import { customerStatus, starType } from '~/utils/const';
 import { SearchContent } from '~/utils/content';
 import { useAtomValue } from 'jotai';
 import { userAtom } from '~/store/atom';
+import { useMount } from 'ahooks';
 const Index = (_props: any, ref: any) => {
   const {
     token: { colorPrimary },
@@ -37,7 +38,7 @@ const Index = (_props: any, ref: any) => {
   const [quota, setQuota] = useState<number>(0);
   const [loan, setLoan] = useState<number>(0);
   const userId = useAtomValue(userAtom)
-
+  const [tips, setTips] = useState<any>({})
 
   function statusNode(value: string) {
     return value == 'o' ? (<Tag color="gold">未设置</Tag>) : (value == 'n' ? (<Tag color="gold">无</Tag>) : (<Tag color="blue">有</Tag>));
@@ -212,7 +213,6 @@ const Index = (_props: any, ref: any) => {
 
   useEffect(() => {
     if (userId) {
-      console.log("🚀 ~ useEffect ~ userId:", userId)
       setOpen(false);
 
       setTimeout(() => {
@@ -223,7 +223,13 @@ const Index = (_props: any, ref: any) => {
   }, [userId])
 
 
-
+  useMount(() => {
+    req.post('MyCustomer/info', {}).then(res => {
+      if (res.code == 1) {
+        setTips(res.data)
+      }
+    })
+  })
 
   useImperativeHandle(ref, () => ({
     refresh,
@@ -497,6 +503,19 @@ const Index = (_props: any, ref: any) => {
                   }}
                 />
               </div>
+            </div>
+
+            <div className='w-full mb-2'>
+              <div className='flex items-center w-full'>
+                <span className='text-red-600'>待抓客户提醒：</span>
+                你有<span className='text-blue-700 underline mx-1'>{tips.uncaying_customers_1}</span>条“待跟进"客户超过1天未跟进；
+
+                有<span className='text-blue-700 underline mx-1'>{tips.uncaying_customers_9}</span>条客户超过9天未跟进(其中2星以上的客户<span className='text-blue-700 underline mx-1'>{tips.uncaying_customers_9_2}</span>条)；
+                
+                有<span className='text-blue-700 underline mx-1'>{tips.uncaying_customers_28}</span>条客户超过28天未跟进(其中2星以上的客户<span className='text-blue-700 underline mx-1'>{tips.uncaying_customers_28_2}</span>条)
+              </div>
+              {tips.my_customers + tips.redistribute_customers + tips.surplus_customers >= 500 ?
+                <div className='text-red-600'>数据上限500条提醒：我的客户({tips.my_customers}) 再分配喜户({tips.redistribute_customers})剩佘({tips.surplus_customers})</div> : null}
             </div>
 
             <Button type="primary" onClick={() => {

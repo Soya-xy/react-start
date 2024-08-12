@@ -3,6 +3,7 @@ import React, { forwardRef, useEffect, useRef } from 'react';
 import type { FC } from 'react';
 import { Button, Form, Input, App, Select, DatePicker } from 'antd';
 import * as req from '~/class/request';
+import dayjs from 'dayjs';
 
 const levelList = [
     { value: 1, label: '正常' },
@@ -12,8 +13,12 @@ const levelList = [
 const Index = (_props: any, ref: any) => {
     const { message } = App.useApp();
     const formRef = useRef<any>();
+    console.log(_props);
 
     useEffect(() => {
+        if (_props.data.remind) {
+            _props.data.remind = dayjs(_props.data.remind)
+        }
         formRef.current.setFieldsValue(_props.data)
     }, [])
 
@@ -47,7 +52,7 @@ const Index = (_props: any, ref: any) => {
                 label='客户名称'
                 rules={[{ required: true, message: '请输入客户名称' }]}
             >
-                <Input />
+                <Input disabled />
             </Form.Item>
 
 

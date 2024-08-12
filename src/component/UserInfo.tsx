@@ -1,5 +1,5 @@
 import React, { forwardRef, useRef, useState, useEffect } from 'react';
-import { Button, Form, Input, App, Select, Cascader, DatePicker } from 'antd';
+import { Button, Form, Input, App, Select, Cascader, DatePicker, Image } from 'antd';
 import FileList from '../common/FileList';
 import * as req from '../class/request';
 import { cityOptions } from '~/utils/area';
@@ -7,27 +7,75 @@ import dayjs from 'dayjs';
 
 interface types {
     value?: string;
+    title?: string;
     className?: string;
+    type?: number;
+    isAvatar?: boolean;
     onChange?: (value: string) => void;
 }
 // 上传图片组件
-const CustomUpload: React.FC<types> = ({ value = '', className = '', onChange }) => {
+const CustomUpload: React.FC<types> = ({ value = '', className = '', type = 1, isAvatar = true, title = '修改头像', onChange }) => {
+    console.log(value, 'value');
+
     const fileRef: any = useRef(null);
     const triggerChange = (url: string) => {
         onChange?.(url);
     };
+    const [visible, setVisible] = useState(false);
+
     return (
         <React.Fragment>
-            <div className={`${className} editavatar cursor`} style={{ border: value !== '' ? 0 : '' }} onClick={() => {
-                fileRef.current.refresh();
-            }}>
-                {value === '' && <img alt='' src={new URL('../imgs/default.png', import.meta.url).href} />}
-                {value !== '' && <img alt='' src={value} style={{ width: '60px', height: '60px' }} />}
-                <span className='zi'>修改头像</span>
+            <div className={`${className} ${isAvatar ? 'editavatar' : ''} cursor`} style={{ border: value !== '' ? 0 : '' }}
+                onClick={() => {
+                    if(isAvatar){
+                        fileRef.current.refresh();
+                    }
+                }}>
+                {!value && (
+                    isAvatar ?
+                        <img alt='' src={new URL('../imgs/default.png', import.meta.url).href} style={{ width: '60px', height: '60px' }} /> :
+                        <div className='flex flex-col items-center'>
+                            <img alt='' src={new URL('../imgs/default.png', import.meta.url).href} className='min-w-[60px] min-h-[120px]' />
+                            <Button
+                                className="mt-2"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    fileRef.current.refresh();
+                                }}>修改</Button>
+                        </div>
+                )}
+
+                {value &&
+                    (isAvatar ?
+                        <img alt='' src={value} style={{ width: '60px', height: '60px' }} /> :
+                        (<div className='flex flex-col items-center'>
+                            <Image
+                                src={value}
+                                className='min-w-[60px] min-h-[120px]'
+                                preview={{
+                                    visible,
+                                    src: value,
+                                    onVisibleChange: (value) => {
+                                        console.log(value);
+                                        setVisible(value);
+                                    },
+                                }}
+                            />
+                            <Button
+                                className="mt-2"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    fileRef.current.refresh();
+                                }}>修改</Button>
+                        </div>))
+                }
+                <span className='zi'>{title}</span>
             </div>
 
             {/* 文件库 */}
-            <FileList ref={fileRef} type={1} onOk={(data: any) => {
+            <FileList ref={fileRef} type={type} onOk={(data: any) => {
                 triggerChange(data[0])
             }} />
         </React.Fragment>
@@ -101,7 +149,7 @@ const Index = (_props: any, ref: any) => {
                         </div>
                         <div className='ml-4 flex-1'>
                             <span>{info.name}</span>
-                            <div className='flex flex-wrap'>
+                            <div className='flex flex-wrap gap-4'>
                                 <Form.Item className='item32' name="native" label="籍贯">
                                     <Input placeholder='请输入籍贯' />
                                 </Form.Item>
@@ -116,7 +164,7 @@ const Index = (_props: any, ref: any) => {
                                     <Input placeholder='请输入学历' />
                                 </Form.Item>
                             </div>
-                            <div className='flex'>
+                            <div className='flex gap-4'>
                                 <Form.Item className='item32' name="graduated_school" label="毕业院校">
                                     <Input placeholder='请输入毕业院校' />
                                 </Form.Item>
@@ -130,7 +178,7 @@ const Index = (_props: any, ref: any) => {
                                     <Input placeholder='请输入岗位' />
                                 </Form.Item>
                             </div>
-                            <div className='flex'>
+                            <div className='flex gap-4'>
                                 <Form.Item className='item32' name="entry_time" label="入职时间">
                                     <DatePicker
                                         format='YYYY-MM-DD'
@@ -147,7 +195,7 @@ const Index = (_props: any, ref: any) => {
                                     <Input placeholder='请输入公司' disabled />
                                 </Form.Item>
                             </div>
-                            <div className='flex'>
+                            <div className='flex gap-4'>
                                 <Form.Item className='item32' name="birth" label="出生日期">
                                     <DatePicker
                                         format='YYYY-MM-DD'
@@ -164,9 +212,11 @@ const Index = (_props: any, ref: any) => {
                                     <Input placeholder='请输入一级部门' disabled />
                                 </Form.Item>
                             </div>
-                            <div className="flex">
+                            <div className="flex gap-4">
                                 {/* 身份证 */}
-                                <Form.Item className='item32' name="idcard" label="身份证">
+                                <Form.Item className='item32' name="idcard" label="身份证"
+                                    rules={[{ pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, message: '请输入正确的身份证号' }]}
+                                >
                                     <Input placeholder='请输入身份证' />
                                 </Form.Item>
                                 {/* 上一家公司职务 */}
@@ -181,19 +231,19 @@ const Index = (_props: any, ref: any) => {
                         </div>
                     </div>
                     {/* 上传毕业证、报告 */}
-                    <div className='flex'>
+                    <div className='flex gap-4'>
                         <Form.Item name="diploma" className='item23 userInfoItem' label="上传毕业证">
-                            <CustomUpload value={userInfo.diploma} onChange={(url) => {
+                            <CustomUpload isAvatar={false} title='' value={userInfo.diploma} onChange={(url) => {
                                 form.setFieldsValue({ diploma: url })
                             }} />
                         </Form.Item>
                         <Form.Item name="report" className='item23 userInfoItem' label="提交报告">
-                            <CustomUpload value={userInfo.report} onChange={(url) => {
+                            <CustomUpload isAvatar={false} title='' value={userInfo.report} onChange={(url) => {
                                 form.setFieldsValue({ report: url })
                             }} />
                         </Form.Item>
                         <Form.Item name="credit" className='item23 userInfoItem' label="征信报告">
-                            <CustomUpload value={userInfo.credit} onChange={(url) => {
+                            <CustomUpload isAvatar={false} title='' value={userInfo.credit} onChange={(url) => {
                                 form.setFieldsValue({ credit: url })
                             }} />
                         </Form.Item>

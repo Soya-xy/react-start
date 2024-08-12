@@ -104,12 +104,12 @@ const Index = (_props: any) => {
           </Popconfirm>
 
           <Popconfirm title={base.cooperation === 'y' ? '确定取消加入合作单吗？' : '确定加入合作单吗？'} onConfirm={() => {
-            req.post('MyCustomer/AddPubPool', { id: _props.data.id }).then((res: any) => {
-              if (res.code === 1) {
-                message.success('加入成功')
-                refresh()
-              }
-            })
+            // req.post('MyCustomer/AddPubPool', { id: _props.data.id }).then((res: any) => {
+            //   if (res.code === 1) {
+            //     message.success('加入成功')
+            //     refresh()
+            //   }
+            // })
           }}>
             <Button type="primary" className={base.cooperation === 'y' ? '!bg-yellow-500' : ''}>{base.cooperation === 'y' ? '取消加入合作单' : '加入合作单'}</Button>
           </Popconfirm>
@@ -252,10 +252,10 @@ const Index = (_props: any) => {
         title={(<Title title={`添加备忘`} />)}
       >
         <Add type={'add'} data={{
-          id: _props.data.id
+          id: _props.data.id,
+          name: _props.data.name,
         }} onOk={() => {
-          setOpen(false);
-          refresh()
+          setNoteOpen(false);
         }} />
       </CustomModal>
 

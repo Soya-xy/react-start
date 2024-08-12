@@ -13,6 +13,7 @@ import Liabilities from './Liabilities';
 import Need from './Need';
 import All from './All';
 import Note from './Note';
+import Distribution from './Distribution';
 
 const Index = (_props: any, ref: any) => {
     console.log("🚀 ~ Index ~ _props:", _props)
@@ -76,7 +77,7 @@ const Index = (_props: any, ref: any) => {
                         </Radio.Group>
                         {item == 1 && <Note type={_props.type} data={_props.data} />}
                         {item == 2 && <div>
-                            <h3>分配记录</h3>
+                            <Distribution data={_props.data} />
                         </div>}
                     </div>
                 </>}
