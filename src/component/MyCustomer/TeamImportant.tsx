@@ -6,7 +6,7 @@ import CustomTable from '~/common/Table';
 import CustomModal from '~/common/Modal';
 import * as req from '~/class/request';
 import Add from './Add';
-import { customerStatus, starType } from '~/utils/const';
+import { customerStatus, loanCondition, starType } from '~/utils/const';
 import { SearchContent } from '~/utils/content';
 import { useAtomValue } from 'jotai';
 import { userAtom } from '~/store/atom';
@@ -355,12 +355,7 @@ const Index = (_props: any, ref: any) => {
                 <div className='mr-2'>贷款条件</div>
                 <Select
                   allowClear
-                  options={[
-                    { label: '车', value: 1 },
-                    { label: '代发', value: 2 },
-                    { label: '保单', value: 3 },
-                    { label: '公积金', value: 4 },
-                  ]}
+                  options={loanCondition}
                   placeholder='请选择贷款条件'
                   className=' !w-full flex-1 marginr12'
                   onChange={(value) => {

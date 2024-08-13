@@ -31,7 +31,6 @@ const Index = (props, _ref) => {
                 } else if (res.data.visible == 4) {  // 本地服务器
                     action = httpUrl ;
                 }
-                console.log("🚀 ~ req.post ~ action:", action)
 
                 setAction(action);
                 setToken(res.data.token);

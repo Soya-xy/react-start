@@ -15,7 +15,6 @@ interface types {
 }
 // 上传图片组件
 const CustomUpload: React.FC<types> = ({ value = '', className = '', type = 1, isAvatar = true, title = '修改头像', onChange }) => {
-    console.log(value, 'value');
 
     const fileRef: any = useRef(null);
     const triggerChange = (url: string) => {
@@ -27,7 +26,7 @@ const CustomUpload: React.FC<types> = ({ value = '', className = '', type = 1, i
         <React.Fragment>
             <div className={`${className} ${isAvatar ? 'editavatar' : ''} cursor`} style={{ border: value !== '' ? 0 : '' }}
                 onClick={() => {
-                    if(isAvatar){
+                    if (isAvatar) {
                         fileRef.current.refresh();
                     }
                 }}>

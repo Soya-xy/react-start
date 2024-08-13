@@ -30,7 +30,8 @@
     "react-router-dom": "^6.26.0",
     "react-ueditor-wrap": "^1.0.8",
     "typescript": "^5.5.4",
-    "web-vitals": "^4.2.3"
+    "web-vitals": "^4.2.3",
+    "xlsx": "^0.18.5"
   },
   "proxy": "https://chat.honghukeji.net:10443/admin/",
   "scripts": {

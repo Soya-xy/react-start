@@ -29,6 +29,7 @@ export default defineConfig({
     'ellipsis-text': 'nowrap-hidden text-ellipsis',
     'transition-base': 'transition-all duration-300 ease-in-out',
     'bb-border': 'border-b border-solid border-[var(--color-neutral-2)]',
+    'text-underline': 'text-blue-700 cursor-pointer underline',
   },
   presets: [
     presetUno(),

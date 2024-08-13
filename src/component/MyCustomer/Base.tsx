@@ -3,7 +3,7 @@ import { forwardRef, useContext, useEffect, useRef, useState } from "react";
 import { areaOption, cityOptions } from "~/utils/area";
 import { UserContent } from "~/utils/content";
 import * as req from '~/class/request';
-import { customerStatus, starType } from "~/utils/const";
+import { customerStatus, loanType, starType } from "~/utils/const";
 import dayjs from "dayjs";
 
 const Index = (_props: any) => {
@@ -140,13 +140,7 @@ const Index = (_props: any) => {
           <Input placeholder="请输入申请额度" addonAfter="万元" />
         </Form.Item>
         <Form.Item name="loanType" label="贷款类型">
-          <Select placeholder="请选择" options={[
-            { label: '车', value: 1 },
-            { label: '代发', value: 2 },
-            { label: '保单', value: 3 },
-            { label: '公积金', value: 4 },
-            { label: '房', value: 5 },
-          ]}></Select>
+          <Select placeholder="请选择" options={loanType}></Select>
         </Form.Item>
         {/* 星级 */}
         <Form.Item name="star" label="星级" rules={[{ required: true }]}>

@@ -32,9 +32,7 @@ export const microLoan = [
     { label: '10万', value: 3 },
     { label: '30万', value: 4 },
     { label: '80万', value: 5 },
-  ]
-
-
+]
 
 // 1-5星级
 export const starType = [
@@ -43,4 +41,13 @@ export const starType = [
     { label: '3星', value: 3 },
     { label: '4星', value: 4 },
     { label: '5星', value: 5 },
-] 
+]
+
+// 贷款条件
+export const loanCondition = [
+    { label: '未设置', value: 0 },
+    { label: '车', value: 1 },
+    { label: '代发', value: 2 },
+    { label: '保单', value: 3 },
+    { label: '公积金', value: 4 },
+]

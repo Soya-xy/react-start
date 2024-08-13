@@ -40,7 +40,7 @@ export default class Index extends React.Component {
                             return prev[curr]
                         }, res)
                         this.setState({
-                            total: data.all,
+                            total: data?.all || res.data.all,
                             data: this.initData(data.datas || data, data.all),
                             loading: false,
                         })

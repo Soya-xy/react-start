@@ -6,11 +6,12 @@ import CustomTable from '~/common/Table';
 import CustomModal from '~/common/Modal';
 import * as req from '~/class/request';
 import Add from './Add';
-import { customerStatus, starType } from '~/utils/const';
+import { customerStatus, loanCondition, starType } from '~/utils/const';
 import { SearchContent } from '~/utils/content';
 import { useAtomValue } from 'jotai';
 import { userAtom } from '~/store/atom';
 import { useMount } from 'ahooks';
+import PlAdd from './PlAdd';
 const Index = (_props: any, ref: any) => {
   const {
     token: { colorPrimary },
@@ -39,6 +40,7 @@ const Index = (_props: any, ref: any) => {
   const [loan, setLoan] = useState<number>(0);
   const userId = useAtomValue(userAtom)
   const [tips, setTips] = useState<any>({})
+  const [quick, setQuick] = useState<number>(0)
 
   function statusNode(value: string) {
     return value == 'o' ? (<Tag color="gold">未设置</Tag>) : (value == 'n' ? (<Tag color="gold">无</Tag>) : (<Tag color="blue">有</Tag>));
@@ -209,7 +211,7 @@ const Index = (_props: any, ref: any) => {
 
   useEffect(() => {
     refresh()
-  }, [name, gender, star, status, remark, no_remark, longType, longStatus, date, date_section, is_lock, city, house, quota, loan])
+  }, [name, gender, star, status, remark, no_remark, longType, longStatus, date, date_section, is_lock, city, house, quota, loan, quick])
 
   useEffect(() => {
     if (userId) {
@@ -252,6 +254,7 @@ const Index = (_props: any, ref: any) => {
       date_section: date_section,
       is_lock: is_lock,
       city: city,
+      quick: quick,
       house: house,
       quota: quota,
       loan: loan,
@@ -298,6 +301,7 @@ const Index = (_props: any, ref: any) => {
       }
     })
   }
+  const [importOpen, setImportOpen] = useState<boolean>(false)
 
 
 
@@ -360,12 +364,7 @@ const Index = (_props: any, ref: any) => {
                 <div className='mr-2'>贷款条件</div>
                 <Select
                   allowClear
-                  options={[
-                    { label: '车', value: 1 },
-                    { label: '代发', value: 2 },
-                    { label: '保单', value: 3 },
-                    { label: '公积金', value: 4 },
-                  ]}
+                  options={loanCondition}
                   placeholder='请选择贷款条件'
                   className=' !w-full flex-1 marginr12'
                   onChange={(value) => {
@@ -445,7 +444,6 @@ const Index = (_props: any, ref: any) => {
                   placeholder='请输入内容'
                   onChange={(e) => {
                     setCity(e.target.value || '');
-
                   }}
                 />
               </div>
@@ -508,11 +506,12 @@ const Index = (_props: any, ref: any) => {
             <div className='w-full mb-2'>
               <div className='flex items-center w-full'>
                 <span className='text-red-600'>待抓客户提醒：</span>
-                你有<span className='text-blue-700 underline mx-1'>{tips.uncaying_customers_1}</span>条“待跟进"客户超过1天未跟进；
+                你有<span className='text-underline mx-1' onClick={() => setQuick(1)}>{tips.uncaying_customers_1}</span>条“待跟进"客户超过1天未跟进；
 
-                有<span className='text-blue-700 underline mx-1'>{tips.uncaying_customers_9}</span>条客户超过9天未跟进(其中2星以上的客户<span className='text-blue-700 underline mx-1'>{tips.uncaying_customers_9_2}</span>条)；
-                
-                有<span className='text-blue-700 underline mx-1'>{tips.uncaying_customers_28}</span>条客户超过28天未跟进(其中2星以上的客户<span className='text-blue-700 underline mx-1'>{tips.uncaying_customers_28_2}</span>条)
+                有<span className='text-underline mx-1' onClick={() => setQuick(2)}>{tips.uncaying_customers_9}</span>条客户超过9天未跟进(其中2星以上的客户<span className='text-underline mx-1' onClick={() => setQuick(3)}>{tips.uncaying_customers_9_2}</span>条)；
+
+                有<span className='text-underline mx-1' onClick={() => setQuick(4)}>{tips.uncaying_customers_28}</span>条客户超过28天未跟进(其中2星以上的客户<span className='text-underline mx-1' onClick={() => setQuick(5)}>{tips.uncaying_customers_28_2}</span>条)
+                {quick ? <Button type='default'>清楚</Button> : null}
               </div>
               {tips.my_customers + tips.redistribute_customers + tips.surplus_customers >= 500 ?
                 <div className='text-red-600'>数据上限500条提醒：我的客户({tips.my_customers}) 再分配喜户({tips.redistribute_customers})剩佘({tips.surplus_customers})</div> : null}
@@ -521,6 +520,13 @@ const Index = (_props: any, ref: any) => {
             <Button type="primary" onClick={() => {
               setOpen(true);
             }}>添加客户</Button>
+            <Button type="primary" className='ml-2' onClick={() => {
+              setImportOpen(true);
+            }}>导入</Button>
+            <Button type="primary" className='ml-2' onClick={() => {
+              setOpen(true);
+            }}>导出</Button>
+
           </div>
           <div className='bgbai margt20 flex_auto'>
             <Title title='我的客户' />
@@ -546,6 +552,19 @@ const Index = (_props: any, ref: any) => {
             refresh()
           }} />
         </CustomModal>
+
+        <CustomModal
+				title={(<Title title="批量导入题库" />)}
+				open={importOpen}
+				onCancel={() => {
+					setImportOpen(false)
+				}}
+			>
+				<PlAdd onCancel={onCancel} onOk={() => {
+					setImportOpen(false);
+					refresh()
+				}} />
+			</CustomModal>
       </SearchContent.Provider>
 
     </React.Fragment>
