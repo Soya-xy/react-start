@@ -71,8 +71,8 @@ const Index = (_props: any, ref: any) => {
                         stime: dayjs(item[13]).format('YYYY-MM-DD'),
                         loan_type: loanType.find((loanTypeItem) => loanTypeItem.value === item[14])?.value,
                         source: 2,
-                        city: item[15],
-                        source_media: item[16],
+                        city: item[16],
+                        source_media: item[17],
                     }
                     console.log(item, k);
 

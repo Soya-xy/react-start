@@ -10,7 +10,7 @@ import { SearchContent } from "~/utils/content";
 import { userAtom } from "~/store/atom";
 import Add from "../Memo/Add";
 
-const Index = (_props: any) => {
+const Index = (_props: any, _ref: any) => {
   const { message } = App.useApp()
   const [info, setInfo] = useState<any>([])
 

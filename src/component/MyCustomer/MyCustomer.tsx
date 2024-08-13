@@ -1,12 +1,13 @@
 
 import React, { useImperativeHandle, forwardRef, useRef, useState, useEffect } from 'react';
-import { Button, theme, App, Input, Image, Tag, DatePicker, Select, Popover } from 'antd';
+import { Button, theme, App, Input, Image, Tag, DatePicker, Select, Popover, Popconfirm } from 'antd';
 import Title from '~/common/Title';
 import CustomTable from '~/common/Table';
 import CustomModal from '~/common/Modal';
 import * as req from '~/class/request';
 import Add from './Add';
-import { customerStatus, loanCondition, starType } from '~/utils/const';
+import * as XLSX from 'xlsx';
+import { customerStatus, loanCondition, loanType, starType } from '~/utils/const';
 import { SearchContent } from '~/utils/content';
 import { useAtomValue } from 'jotai';
 import { userAtom } from '~/store/atom';
@@ -28,7 +29,7 @@ const Index = (_props: any, ref: any) => {
   const [remark, setRemark] = useState<any>();
   const [no_remark, setNoRemark] = useState<any>();
   const { RangePicker } = DatePicker;
-
+  const [count, setCount] = useState<number>(0)
   const [longType, setLongtype] = useState<number>(0);
   const [longStatus, setLongStatus] = useState<number>(0);
   const [date, setDate] = useState<number>(0);
@@ -269,6 +270,7 @@ const Index = (_props: any, ref: any) => {
       orderBy: 'desc',
       ...params()
     }).then(res => {
+      setCount(res.data.all || 0)
       callback(res)
     })
   }
@@ -303,7 +305,27 @@ const Index = (_props: any, ref: any) => {
   }
   const [importOpen, setImportOpen] = useState<boolean>(false)
 
-
+  // 添加字段映射
+  const fieldMapping: { [key: string]: string } = {
+    id: 'ID',
+    name: '姓名',
+    gender: '性别',
+    star: '星级',
+    status: '状态',
+    age: '年龄',
+    remark: '备注',
+    aname: '顾问',
+    is_house: '房',
+    is_car: '车',
+    is_policy: '保单',
+    is_fund: '公积金',
+    apply_limit: '申请额度',
+    loan_type: '贷款类型',
+    source: '来源',
+    city: '城市',
+    source_media: '来源媒体',
+    stime: '时间'
+  };
 
   return (
     <React.Fragment>
@@ -511,7 +533,9 @@ const Index = (_props: any, ref: any) => {
                 有<span className='text-underline mx-1' onClick={() => setQuick(2)}>{tips.uncaying_customers_9}</span>条客户超过9天未跟进(其中2星以上的客户<span className='text-underline mx-1' onClick={() => setQuick(3)}>{tips.uncaying_customers_9_2}</span>条)；
 
                 有<span className='text-underline mx-1' onClick={() => setQuick(4)}>{tips.uncaying_customers_28}</span>条客户超过28天未跟进(其中2星以上的客户<span className='text-underline mx-1' onClick={() => setQuick(5)}>{tips.uncaying_customers_28_2}</span>条)
-                {quick ? <Button type='default'>清楚</Button> : null}
+                {quick ? <Button type='default' onClick={() => {
+                  setQuick(0);
+                }}>清除</Button> : null}
               </div>
               {tips.my_customers + tips.redistribute_customers + tips.surplus_customers >= 500 ?
                 <div className='text-red-600'>数据上限500条提醒：我的客户({tips.my_customers}) 再分配喜户({tips.redistribute_customers})剩佘({tips.surplus_customers})</div> : null}
@@ -523,9 +547,63 @@ const Index = (_props: any, ref: any) => {
             <Button type="primary" className='ml-2' onClick={() => {
               setImportOpen(true);
             }}>导入</Button>
-            <Button type="primary" className='ml-2' onClick={() => {
-              setOpen(true);
-            }}>导出</Button>
+            <Popconfirm title='确定导出当前条件下的客户吗？' className='ml-2' onConfirm={() => {
+              req.post('MyCustomer/MyCustomerList', {
+                page: 1,
+                size: count,
+                orderBy: 'desc',
+                ...params()
+              }).then(res => {
+                if (res.code === 1 && res.data && res.data.datas.length > 0) {
+                  // 转换数据，将英文字段名替换为中文
+                  const transformedData = res.data.datas.map((item: any) => {
+                    const newItem: { [key: string]: any } = {};
+                    Object.keys(item).forEach(key => {
+                      if (fieldMapping[key]) {
+                        if (item[key] === 'n') {
+                          newItem[fieldMapping[key]] = '否';
+                        } else if (item[key] === 'y') {
+                          newItem[fieldMapping[key]] = '是';
+                        } else if (item[key] === 'o') {
+                          newItem[fieldMapping[key]] = '未设置';
+                        } else if (item[key] === 'man') {
+                          newItem[fieldMapping[key]] = '男';
+                        } else if (item[key] === 'woman') {
+                          newItem[fieldMapping[key]] = '女';
+                        } else if (key === 'loan_type') {
+                          newItem[fieldMapping[key]] = loanType.find(res => res.value === item[key])?.label;
+                        } else if (key === 'status') {
+                          newItem[fieldMapping[key]] = customerStatus.find(res => res.value === item[key])?.label;
+                        } else if (key === 'source') {
+                          newItem[fieldMapping[key]] = item[key] === '1' ? '后台申请' : '表格导入';
+                        } else if (key === 'source_media') {
+                          newItem[fieldMapping[key]] = '后台申请'
+                        } else {
+                          newItem[fieldMapping[key]] = item[key];
+                        }
+                      }
+                    });
+                    return newItem;
+                  });
+
+                  // 创建工作簿
+                  const wb = XLSX.utils.book_new();
+                  // 创建工作表
+                  const ws = XLSX.utils.json_to_sheet(transformedData);
+                  // 将工作表添加到工作簿
+                  XLSX.utils.book_append_sheet(wb, ws, "客户列表");
+                  // 生成xlsx文件并下载
+                  XLSX.writeFile(wb, "客户列表.xlsx");
+                } else {
+                  message.error('导出失败，请稍后重试');
+                }
+              }).catch(err => {
+                console.error(err);
+                message.error('导出失败，请稍后重试');
+              });
+            }}>
+              <Button type="primary">导出</Button>
+            </Popconfirm>
 
           </div>
           <div className='bgbai margt20 flex_auto'>
@@ -554,17 +632,17 @@ const Index = (_props: any, ref: any) => {
         </CustomModal>
 
         <CustomModal
-				title={(<Title title="批量导入题库" />)}
-				open={importOpen}
-				onCancel={() => {
-					setImportOpen(false)
-				}}
-			>
-				<PlAdd onCancel={onCancel} onOk={() => {
-					setImportOpen(false);
-					refresh()
-				}} />
-			</CustomModal>
+          title={(<Title title="批量导入题库" />)}
+          open={importOpen}
+          onCancel={() => {
+            setImportOpen(false)
+          }}
+        >
+          <PlAdd onCancel={onCancel} onOk={() => {
+            setImportOpen(false);
+            refresh()
+          }} />
+        </CustomModal>
       </SearchContent.Provider>
 
     </React.Fragment>

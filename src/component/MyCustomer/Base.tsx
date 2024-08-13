@@ -6,7 +6,7 @@ import * as req from '~/class/request';
 import { customerStatus, loanType, starType } from "~/utils/const";
 import dayjs from "dayjs";
 
-const Index = (_props: any) => {
+const Index = (_props: any, _ref: any) => {
   const { message } = App.useApp();
   const formRef = useRef<any>();
   const userId = useContext(UserContent);
