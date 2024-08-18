@@ -42,6 +42,7 @@ const Index = (_props: any, ref: any) => {
   const userId = useAtomValue(userAtom)
   const [tips, setTips] = useState<any>({})
   const [quick, setQuick] = useState<number>(0)
+  const [tableHeight, setTableHeight] = useState<number>(0)
 
   function statusNode(value: string) {
     return value == 'o' ? (<Tag color="gold">未设置</Tag>) : (value == 'n' ? (<Tag color="gold">无</Tag>) : (<Tag color="blue">有</Tag>));
@@ -234,6 +235,19 @@ const Index = (_props: any, ref: any) => {
     })
   })
 
+  useEffect(() => {
+    if (tableRef.current) {
+      const tableDom = document.querySelector('.customer-table') as HTMLElement
+      if (tableDom) {
+        const windowHeight = window.innerHeight;
+        setTableHeight(windowHeight - tableDom.offsetTop - 150);
+      }
+      // const titleHeight = titleRef.current.clientHeight;
+      // const windowHeight = window.innerHeight;
+      console.log(tableRef.current);
+
+    }
+  }, []);
   useImperativeHandle(ref, () => ({
     refresh,
   }))
@@ -326,7 +340,6 @@ const Index = (_props: any, ref: any) => {
     source_media: '来源媒体',
     stime: '时间'
   };
-
   return (
     <React.Fragment>
       <SearchContent.Provider value={{ params: params }}>
@@ -607,13 +620,13 @@ const Index = (_props: any, ref: any) => {
 
           </div>
           <div className='bgbai margt20 flex_auto'>
-            <Title title='我的客户' />
+            <Title title='我的客户'  />
             <CustomTable
-
               ref={tableRef}
+              customClass='customer-table'
               columns={columns}
               onRefresh={onRefresh}
-              scroll={{ y: window.innerHeight - 368, x: window.innerWidth + 200 }}
+              scroll={{ y: tableHeight, x: window.screen.width + 200 }}
             />
           </div>
         </div>

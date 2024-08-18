@@ -8,6 +8,9 @@ dependencies:
   '@ant-design/cssinjs':
     specifier: ^1.21.0
     version: 1.21.0(react-dom@18.3.1)(react@18.3.1)
+  '@ant-design/icons':
+    specifier: ^5.4.0
+    version: 5.4.0(react-dom@18.3.1)(react@18.3.1)
   '@testing-library/jest-dom':
     specifier: ^6.4.8
     version: 6.4.8
@@ -91,6 +94,9 @@ devDependencies:
   '@iconify-json/carbon':
     specifier: ^1.1.37
     version: 1.1.37
+  '@iconify-json/mdi':
+    specifier: ^1.1.68
+    version: 1.1.68
   '@types/xlsx':
     specifier: ^0.0.36
     version: 0.0.36
@@ -973,6 +979,12 @@ packages:
 
   /@iconify-json/carbon@1.1.37:
     resolution: {integrity: sha512-Hj9oZtRmN63yt29YovqgqOJQhaoVMNMTkFLT3HKAJm4HjvI405Juez5UfdysYmLjF708U7gJNx4U6K1k5+fTBw==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
+  /@iconify-json/mdi@1.1.68:
+    resolution: {integrity: sha512-7//TKCiXLU6kNWeOJRTBbisofVO7rF1sD1TZTL4/V9nqlmVNczQ5IOY0GgKOTsitkcTnX9GXgrgbjw3OI5B69w==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: true

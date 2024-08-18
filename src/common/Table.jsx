@@ -41,7 +41,7 @@ export default class Index extends React.Component {
                         }, res)
                         this.setState({
                             total: data?.all || res.data.all,
-                            data: this.initData(data.datas || data, data.all),
+                            data: this.initData(data.datas || data, data.all) || [],
                             loading: false,
                         })
                     }
@@ -56,6 +56,10 @@ export default class Index extends React.Component {
         })
     }
     initData(arry, total) {
+        if (arry.length == 0) {
+            return []
+        }
+
         let arryNew = []
         arry.map((item, index) => {
             let key = Helper.getNum(index, total, this.state.size, this.state.page, this.state.orderBy)
@@ -74,13 +78,14 @@ export default class Index extends React.Component {
     render() {
         return (
             <Table
-                className='pubList margl24 margr24'
+                className={`pubList margl24 margr24 ${this.props.customClass ? this.props.customClass : ''} `}
                 loading={this.state.loading}
                 pagination={{
                     position: ["bottomLeft"],
                     pageSize: this.state.size,
                     current: this.state.page,
                     total: this.state.total,
+                    hideOnSinglePage: true,
                     showSizeChanger: false,
                     showTotal: (total, range) => {
                         var num = range[0],

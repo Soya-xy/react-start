@@ -23,26 +23,30 @@ const AdminList = (_props: any, ref: any) => {
 		{
 			title: 'ID',
 			align: 'center',
-			dataIndex: 'admin_id',
+			dataIndex: 'id',
 			width: 90,
 		}, {
 			title: '用户昵称',
 			align: 'center',
-			dataIndex: 'username'
-		}, {
-			title: '上次登录时间',
-			align: 'center',
-			dataIndex: 'last_login_time',
-			render: (time: string) => `${time || '-'}`
-		}, {
-			title: '上次登录IP',
-			align: 'center',
-			dataIndex: 'last_login_ip',
-			render: (ip: string) => `${ip || '-'}`
-		}, {
+			dataIndex: 'name'
+		}, 
+		// {
+		// 	title: '上次登录时间',
+		// 	align: 'center',
+		// 	dataIndex: 'last_login_time',
+		// 	render: (time: string) => `${time || '-'}`
+		// }, {
+		// 	title: '上次登录IP',
+		// 	align: 'center',
+		// 	dataIndex: 'last_login_ip',
+		// 	render: (ip: string) => `${ip || '-'}`
+		// }, 
+		
+		{
 			title: '角色',
 			align: 'center',
-			dataIndex: 'role_name'
+			dataIndex: 'RoleName',
+			render: (RoleName: any) => `${RoleName.role_name || '-'}`
 		}, {
 			title: '添加时间',
 			align: 'center',
@@ -74,7 +78,7 @@ const AdminList = (_props: any, ref: any) => {
 	}
 	// 获取列表数据
 	const getList = (info: any, callback: any) => {
-		req.post('admin/adminList', {
+		req.post('admin/AdminList', {
 			page: info.page,
 			size: info.size,
 			orderBy: '',
@@ -136,7 +140,7 @@ const AdminList = (_props: any, ref: any) => {
 					}}>添加管理员</Button>
 				</div>
 				<div className='bgbai margt20 flex_auto'>
-					<Title title='角色列表' />
+					<Title title='管理员列表' />
 					<CustomTable
 						ref={tableRef}
 						columns={columns}

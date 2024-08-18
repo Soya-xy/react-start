@@ -6,7 +6,7 @@ const Index = (props,_) => {
         token: { colorPrimary },
     } = theme.useToken();
     return (
-        <div className='flexCenter'>
+        <div className={`${props.className ? props.className : ''} flexCenter`}>
             <p className='pline' style={{background: colorPrimary}}></p>
             <h2 className='pubTit'>{props.title}</h2>
         </div>
