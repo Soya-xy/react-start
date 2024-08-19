@@ -102,7 +102,7 @@ const Index = (_props: any, ref: any) => {
               treeData={treeData}
             />
           </div>
-          <List getList={refresh} />
+          <List getList={refresh} style={{ minHeight: height - 100 }} />
         </div>
       </div>
     </React.Fragment>

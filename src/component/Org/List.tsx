@@ -109,21 +109,19 @@ const Index = (_props: any, ref: any) => {
               setName(e.target.value || '');
             }}
           />
-
-
           {org.id && <Button type="primary" onClick={() => {
             setOpen(true);
             setRow({
               pid: org.id
             })
             setType('add')
-          }}>添加配置</Button>}
+          }}>添加部门</Button>}
         </div>
-        <div className='bgbai margt20 flex_auto'>
+        <div className='bgbai margt20 ' style={_props.style}>
           <Title title='组织架构' />
           <Table
             ref={tableRef}
-            className='table'
+            className={` margl24 margr24  `}
             loading={loading}
             columns={columns}
             // indentSize={10}

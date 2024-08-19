@@ -1,7 +1,7 @@
 import type { GeneratorVueOptions } from './'
 
 export function templateAdd(item: GeneratorVueOptions) {
-  return `
+    return `
   import React, { forwardRef,useEffect,useRef } from 'react';
 import type { FC } from 'react';
 import { Button, Form, Input, App, Select,DatePicker } from 'antd';
@@ -10,8 +10,8 @@ import * as req from '~/class/request';
 import { CustomUpload } from '~/Set/AddBasic';
 
 const levelList = [
-    { value: 1, label: '正常' },
-    { value: 2, label: '禁用' },
+    { value: 'y', label: '正常' },
+    { value: 'n', label: '禁用' },
 ];
 
 const Index = (_props: any, ref: any) => {
@@ -45,21 +45,19 @@ const Index = (_props: any, ref: any) => {
             labelCol={{ flex: '82px' }}
         >
             ${item.field.map((field) => {
-    switch (field.type) {
-      case 'select':
-        return `
+        switch (field.type) {
+            case 'select':
+            case 'switch':
+                return `
                             <Form.Item
                                 name='${field.value}'
                                 label='${field.name}'
-                                options={[
-                                    { value: 1, label: '正常' },
-                                     { value: 0, label: '禁用' }
-]}
+                                options={levelList}
                             >
                             </Form.Item>
                             `
-      case 'image':
-        return `
+            case 'image':
+                return `
                             <Form.Item
                                 name='${field.value}'
                                 label='${field.name}'
@@ -69,8 +67,8 @@ const Index = (_props: any, ref: any) => {
                             </Form.Item>
                             `
 
-      case 'datetime':
-        return `
+            case 'datetime':
+                return `
                             <Form.Item
                                 name='${field.value}'
                                 label='${field.name}'
@@ -79,8 +77,8 @@ const Index = (_props: any, ref: any) => {
                                 <DatePicker showTime />
                             </Form.Item>
                             `
-      default:
-        return `
+            default:
+                return `
                             <Form.Item
                                 name='${field.value}'
                                 label='${field.name}'
@@ -89,9 +87,9 @@ const Index = (_props: any, ref: any) => {
                                 <Input />
                             </Form.Item>
                             `
-    }
-  }).join('\n')
-    }
+        }
+    }).join('\n')
+        }
 
             <Button type='primary' htmlType='submit' className='marglauto block margt20'>确定</Button>
         </Form>

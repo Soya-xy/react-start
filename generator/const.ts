@@ -15,7 +15,7 @@ export function templateVue(item: GeneratorVueOptions) {
           title: "${field.name}",
           dataIndex: "${field.value}",
           render: (${field.value}: string) => {
-            return ${field.value} == 'o' ? (<Tag color="gold">否</Tag>) : (<Tag color="blue">是</Tag>);
+            return ${field.value} == 'n' ? (<Tag color="gold">否</Tag>) : (<Tag color="blue">是</Tag>);
           }
         }
         `

@@ -16,7 +16,6 @@ import Note from './Note';
 import Distribution from './Distribution';
 
 const Index = (_props: any, ref: any) => {
-    console.log("🚀 ~ Index ~ _props:", _props)
     const items = _props.type == 'edit' ? [
         { label: '基本信息', key: '1' },
         { label: '身份信息', key: '2' },

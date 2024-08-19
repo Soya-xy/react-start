@@ -13,9 +13,16 @@ export const routes = [
   { name: 'MyCustomer', path: lazy(() => import('~C/MyCustomer/MyCustomer')) },
   { name: 'MyImportant', path: lazy(() => import('~C/MyCustomer/MyImportant')) },
   { name: 'TeamImportant', path: lazy(() => import('~C/MyCustomer/TeamImportant')) },
+  { name: 'Public', path: lazy(() => import('~C/MyCustomer/Public')) },
+  { name: 'Redistribute', path: lazy(() => import('~C/MyCustomer/Redistribute')) },
+  { name: 'TeamCustomer', path: lazy(() => import('~C/MyCustomer/Team')) },
+  { name: 'LevelCustomer', path: lazy(() => import('~C/MyCustomer/Level')) },
   { name: 'Tag', path: lazy(() => import('~C/Tag/Tag')) },
   { name: 'Memo', path: lazy(() => import('~C/Memo/Memo')) },
   { name: 'Org', path: lazy(() => import('~C/Org/Org')) },
+  { name: 'ChannelList', path: lazy(() => import('~C/ChannelList/ChannelList')) },
+  { name: 'Notice', path: lazy(() => import('~C/Notice/Notice')) },
+  { name: 'Goal', path: lazy(() => import('~C/Goal/Goal')) },
 // TODO: add your route here
 ]
 

@@ -72,8 +72,19 @@ const Index = (_props: any, _ref: any) => {
           <Input placeholder="请输入身份证号" />
         </Form.Item>
         {/* 来源 */}
-        <Form.Item name="source" label="来源" rules={[{ required: true }]}>
+        <Form.Item name="source" label="来源" rules={[
+          { required: true, message: '请选择正确的来源' },
+          () => ({
+            validator(_, value) {
+              if (value > 0) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('请选择正确的来源'));
+            },
+          }),
+        ]}>
           <Select placeholder="请选择" options={[
+            { label: '请选择', value: 0 },
             { label: '后台录入', value: 1 },
             { label: '表格导入', value: 2 },
           ]}></Select>
@@ -113,8 +124,19 @@ const Index = (_props: any, _ref: any) => {
         <Form.Item name="residence" label="户籍">
           <Input placeholder="请输入户籍" />
         </Form.Item>
-        <Form.Item name="education" label="学历">
+        <Form.Item name="education" label="学历" rules={[
+          { required: true, message: '请选择正确的学历' },
+          () => ({
+            validator(_, value) {
+              if (value > 0) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('请选择正确的学历'));
+            },
+          }),
+        ]}>
           <Select placeholder="请选择" options={[
+            { label: '请选择', value: 0 },
             { label: '未上学', value: 1 },
             { label: '小学文凭', value: 2 },
             { label: '初中文凭', value: 3 },
@@ -122,8 +144,21 @@ const Index = (_props: any, _ref: any) => {
             { label: '大学及以上文凭', value: 5 },
           ]}></Select>
         </Form.Item>
-        <Form.Item name="schoolType" label="入学类型">
+        <Form.Item name="schoolType" label="入学类型"
+          rules={[
+            { required: true, message: '请选择正确的入学类型' },
+            () => ({
+              validator(_, value) {
+                if (value > 0) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('请选择正确的入学类型'));
+              },
+            }),
+          ]}
+        >
           <Select placeholder="请选择" options={[
+            { label: '请选择', value: 0 },
             { label: '普通入学', value: 1 },
             { label: '国外留学', value: 2 },
           ]}></Select>
