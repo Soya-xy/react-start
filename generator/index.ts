@@ -38,6 +38,16 @@ const findMenu = (data: any, path: string) => {
   return undefined
 }
 
+function fetchData(url: string, method: string, body: any, token: string) {
+  return fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'token': token
+    },
+    body: JSON.stringify(body)
+  }).then((res: any) => res.json())
+}
 
 export default function generator(): Plugin {
   return {
@@ -64,53 +74,31 @@ export default function generator(): Plugin {
           writeFileSync(join(filePath, 'Add.tsx'), modal)
           writeFileSync(join(__dirname, `..${sep}src${sep}utils${sep}route.ts`), s.toString())
 
-          fetch(Global.httpUrl + 'menu/menuList', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'token': e.fetchToken
-            },
-            body: JSON.stringify({
-              page: 1,
-              size: 9999,
-              orderBy: '',
-            })
-          }).then((res: any) => res.json()).then((res: any) => {
+          fetchData(Global.httpUrl + 'menu/menuList', 'POST', {
+            page: 1,
+            size: 9999,
+            orderBy: '',
+          }, e.fetchToken).then((res: any) => {
             if (res.code === 1) {
               const item: any = findMenu(res.data.datas, e.filename)
               if (!item?.id) {
-                fetch(Global.httpUrl + 'menu/addMenu', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'token': e.fetchToken
-                  },
-                  body: JSON.stringify({
-                    level: e.parent.length,
-                    icon: "icon-jibenguanli",
-                    name: e.menuname + '列表',
-                    path: e.filename,
-                    route: `/admin/${e.listApi}`,
-                    sort: 1,
-                    display: 1,
-                    needLog: 0,
-                    pid: e.parentID,
-                  })
-                }).then((res: any) => res.json()).then((res2: any) => {
-                  console.log("🚀 ~ server.ws.on ~ res2:", res2)
+                fetchData(Global.httpUrl + 'menu/addMenu', 'POST', {
+                  level: e.parent.length,
+                  icon: "icon-jibenguanli",
+                  name: e.menuname + '列表',
+                  path: e.filename,
+                  route: `/admin/${e.listApi}`,
+                  sort: 1,
+                  display: 1,
+                  needLog: 0,
+                  pid: e.parentID,
+                }, e.fetchToken).then((res2: any) => {
                   if (res2.code === 1) {
-                    fetch(Global.httpUrl + 'menu/menuList', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                        'token': e.fetchToken
-                      },
-                      body: JSON.stringify({
-                        page: 1,
-                        size: 9999,
-                        orderBy: '',
-                      })
-                    }).then((res: any) => res.json()).then((res3: any) => {
+                    fetchData(Global.httpUrl + 'menu/menuList', 'POST', {
+                      page: 1,
+                      size: 9999,
+                      orderBy: '',
+                    }, e.fetchToken).then((res3: any) => {
                       if (res3.code === 1) {
                         const items: any = findMenu(res3.data.datas, e.filename)
                         console.log("🚀 ~ server.ws.on ~ item:", items)

@@ -11,7 +11,8 @@ export const routes = [
 
   { name: 'Index', path: lazy(() => import('~C/Index')) },
   { name: 'myTask', path: lazy(() => import('~C/myTask/myTask')) },
-  // TODO: add your route here
+    { name: 'ce', path: lazy(() => import('~C/ce/ce')) },
+// TODO: add your route here
 ]
 
 export const Components = () => {
