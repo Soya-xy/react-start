@@ -1170,3 +1170,8 @@ code {
   background-color: #FFFBE6 !important;
   color: #d40636 !important; 
 }
+
+/* 上传配置 */
+.uploadBox{height: 100%;align-content: flex-start;overflow: auto;}
+.uploadBox::-webkit-scrollbar{display: none;}
+.addImgBtn{width: 80px;height: 80px}

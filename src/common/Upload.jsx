@@ -2,16 +2,14 @@ import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'rea
 import { Upload, App } from 'antd';
 import * as req from '../class/request';
 import COS from 'cos-js-sdk-v5';
-import Global from '../class/global';
 
-const httpUrl = Global.uploadUrl;
 let key = '';
 
 const Index = (props, _ref) => {
     const { message, modal } = App.useApp();
-    const [action, setAction] = useState(httpUrl);  // 上传地址
+    const [action, setAction] = useState('');  // 上传地址
     const [token, setToken] = useState('');  // 上传token
-    const [type, setType] = useState(4);  // 上传方式  //1--七牛  2--阿里oss  3--腾讯  4--本地服务器
+    const [type, setType] = useState(1);  // 上传方式  //1--七牛  2--阿里oss  3--腾讯  4--本地服务器
     const [fileList, setFileList] = useState(props.fileList || []);  // 上传文件
     const [configInfo, setConfig] = useState({});
 
@@ -21,7 +19,7 @@ const Index = (props, _ref) => {
     function initToken() {
         req.post('setting/getUploadToken', {}).then(res => {
             if (res.code == 1) {
-                let action = httpUrl;
+                let action;
                 if (res.data.visible === 1) {  // 七牛
                     action = 'https://up-z2.qiniup.com';
                 } else if (res.data.visible === 2) {  //阿里oss
@@ -29,12 +27,11 @@ const Index = (props, _ref) => {
                 } else if (res.data.visible === 3) {  //腾讯
                     action = res.data.path;
                 } else if (res.data.visible == 4) {  // 本地服务器
-                    action = httpUrl ;
+                    action =res.data.uploadUrl;
                 }
-
                 setAction(action);
                 setToken(res.data.token);
-                setType(res.data.visible || 4);
+                setType(res.data.visible);
                 setConfig(res.data);
             }
         })
@@ -139,15 +136,19 @@ const Index = (props, _ref) => {
                 }
                 // 上传完成
                 if (e.file.status == 'done') {
+
                     let fileType = getFileType(e.file);
                     let name, domain, url;
                     if (type === 4) {  // 上传到本地
-
+                        if(e.file.response.code!=1)
+                        {
+                            return message.error("上传失败")
+                        }
                         domain = 4;
                         name = e.file.response.data.name;
                         url = e.file.response.data.url;
-                        console.log(e);
                     } else {  // 上传到cdn
+                        console.log(e)
                         domain = configInfo.domain;
                         name = e.file.name;
                         url = configInfo.domain + '/' + key;

@@ -13,12 +13,22 @@ import 'dayjs/locale/zh-cn';
 import locale from 'antd/locale/zh_CN';
 import { StyleProvider } from '@ant-design/cssinjs';
 
+const element: HTMLElement = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(
-	document.getElementById('root') as HTMLElement
+	element
 );
 
 const data: any = localStorage.getItem('themeConfig_honghu');
-const themeConfig = JSON.parse(data) || {};
+const themeConfig = JSON.parse(data) || {
+	"colorPrimary": "#009b6b",
+	"colorSuccess": "#0081ff",
+	"colorWarning": "#ffb800",
+	"colorError": "#FF4B24"
+};
+element.style.setProperty("--main-colorPrimary", themeConfig.colorPrimary)
+element.style.setProperty("--main-colorSuccess", themeConfig.colorSuccess)
+element.style.setProperty("--main-colorWarning", themeConfig.colorWarning)
+element.style.setProperty("--main-colorError", themeConfig.colorError)
 
 root.render(
 	<ConfigProvider

@@ -28,7 +28,7 @@ const UploadSet = (_props: any, ref: any) => {
                 res.data.qiniu.visible = false;
                 res.data.alioss.visible = false;
                 res.data.txcos.visible = false;
-             
+
                 if (res.data.visible == 1) {
                     res.data.qiniu.visible = true;
                 } else if (res.data.visible == 2) {
@@ -52,7 +52,7 @@ const UploadSet = (_props: any, ref: any) => {
                 // 本地
                 localFormRef.current?.setFieldsValue({
                     local: {
-                        visible:res.data.visible == 4 ? true : false
+                        visible: res.data.visible == 4 ? true : false
                     },
                 })
             }
@@ -64,7 +64,7 @@ const UploadSet = (_props: any, ref: any) => {
         let obj: any = data[key];
         let url = 'setting/saveLocal';
         console.log(obj);
-        
+
         if (key === 'qiniu') {
             url = "setting/saveQiniu";
             obj.visible = obj.visible ? 1 : 0;
@@ -215,7 +215,7 @@ const UploadSet = (_props: any, ref: any) => {
                     ref={localFormRef}
                     onFinish={onFinish}
                 >
-                    <Form.Item label='使用状态' name={['local', 'visible']}  className='paddh' valuePropName='checked'>
+                    <Form.Item label='使用状态' name={['local', 'visible']} className='paddh' valuePropName='checked'>
                         <Switch checkedChildren='开启' unCheckedChildren='关闭' />
                     </Form.Item>
                     <div className='paddh flexSelf flex_end paddb20'>

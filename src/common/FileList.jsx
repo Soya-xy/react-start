@@ -1,8 +1,8 @@
 import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { Button, Input, Select, Image, Pagination, Form, App, } from 'antd';
-import CustomModal from './Modal';
+import CustomModal from './CustomerModal';
 import Title from './Title'
-import * as req from '../class/request';
+import * as req from '~/class/request';
 import CustomUpload from './Upload';
 
 const fileType = [
@@ -50,24 +50,24 @@ export function GetItems(props) {
             {/* 图片 */}
             {item.type == 1 && <ImageDemo data={item} />}
             {/* 视频 */}
-            {item.type == 2 && <video className='wh-full' controls alt='' src={item.url} />}
+            {item.type == 2 && <img className='wj' alt='' src={require('../static/shipin.png')} />}
             {/* excel文件 */}
-            {item.type == 3 && <img className='wj' alt='' src={new URL('../imgs/excel.png', import.meta.url).href} />}
+            {item.type == 3 && <img className='wj' alt='' src={require('../static/excel.png')} />}
             {/* word文件 */}
-            {item.type == 4 && <img className='wj' alt='' src={new URL('../imgs/word.png', import.meta.url).href} />}
+            {item.type == 4 && <img className='wj' alt='' src={require('../static/word.png')} />}
             {/* pdf文件 */}
-            {item.type == 5 && <img className='wj' alt='' src={new URL('../imgs/PDF.png', import.meta.url).href} />}
+            {item.type == 5 && <img className='wj' alt='' src={require('../static/PDF.png')} />}
             {/* 压缩包文件 */}
-            {item.type == 6 && <img className='wj' alt='' src={new URL('../imgs/ysb.png', import.meta.url).href} />}
+            {item.type == 6 && <img className='wj' alt='' src={require('../static/ysb.png')} />}
             {/* 未知文件 */}
-            {item.type == 7 && <img className='wj' alt='' src={new URL('../imgs/other.png', import.meta.url).href} />}
+            {item.type == 7 && <img className='wj' alt='' src={require('../static/other.png')} />}
             {/* 虚拟文件夹 */}
-            {item.type == 8 && <img className='wj' alt='' src={new URL('../imgs/wjj.png', import.meta.url).href} title='双击打开文件夹' />}
+            {item.type == 8 && <img className='wj' alt='' src={require('../static/wjj.png')} title='双击打开文件夹' />}
         </React.Fragment>
     )
 }
 
-const Index = (props, _ref) => {
+const FileList = (props, _ref) => {
     const { message, modal } = App.useApp();
     const [open, setOpen] = useState(false);
     const [list, setList] = useState([]);
@@ -139,6 +139,10 @@ const Index = (props, _ref) => {
             let index = rows.findIndex(item => item === data.url);
             if (index === -1) {
                 if (props.multiple) {  // 多选
+                    if(props.max && rows.length==props.max)
+                    {
+                        rows.splice(0,1);
+                    }
                     setRows([...rows, data.url])
                 } else {
                     setRows([data.url])
@@ -174,7 +178,6 @@ const Index = (props, _ref) => {
         if (rows.length === 0) {
             return message.error('请选择文件', 1.2);
         }
-        console.log(rows)
         props.onOk && props.onOk(rows);
         onCancel();
     }
@@ -340,26 +343,4 @@ const Index = (props, _ref) => {
     )
 }
 
-export default forwardRef(Index);
-// export default class Index extends React.Component {
-//     render(){
-//         return(
-//             <CustomModal
-//                 open={true}
-// 				title={(<Title title='文件库' />)}
-//                 width={824}
-//             >
-//                 <div className='flwp'>
-//                     <Input className='marginr12' placeholder='请输入文件名称' style={{width: 200}} />
-//                     <Select
-//                         placeholder='请选择文件类型'
-//                         options={[]}
-//                         className='marginr12'
-//                     />
-//                     <Button className='marginr12' type='primary'>上传文件</Button>
-//                     <Button type='primary' danger>创建文件夹</Button>
-//                 </div>
-//             </CustomModal>
-//         )
-//     }
-// }
+export default forwardRef(FileList);

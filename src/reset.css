@@ -1,3 +1,22 @@
+:root{
+    --main-colorError:"#FF4B24";
+    --main-colorPrimary:"#009b6b";
+    --main-colorSuccess:"#0081ff";
+    --main-colorWarning:"#ffb800";
+}
+.colorError{
+    color: var(--main-colorError) !important;
+}
+.colorPrimary{
+    color: var(--main-colorPrimary) !important;
+}
+.colorSuccess{
+    color: var(--main-colorSuccess) !important;
+}
+.colorWarning{
+    color: var(--main-colorWarning) !important;
+}
+
 body, h1, h2, h3, h4, h5, h6, hr, p, blockquote,div,/* structural elements 结构元素 */
 dl, dt, dd, ul, ol, li, /* list elements 列表元素 */
 pre, /* text formatting elements 文本格式元素 */

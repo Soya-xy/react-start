@@ -1,71 +1,42 @@
 import React, { useImperativeHandle, forwardRef, useRef, useEffect, useState } from 'react';
 import { App, Button, Form, Input, Select, Switch } from 'antd';
-import FileList from '../../common/FileList';
-import Helper from '../../class/Helper';
-import Editor from '../../common/Editor';
-import * as req from '../../class/request';
-
+import Helper from '~/utils/Helper';
+import Editor from '~/common/Editor';
+import * as req from '~/class/request';
+import UploadImg from "~/common/UploadImg";
 const typeList = [
     { value: 1, label: '文本' },
-    { value: 6, label: '二维码' },
     { value: 2, label: '数字' },
     { value: 3, label: '图片' },
     { value: 4, label: '图文' },
     { value: 5, label: '开/关' },
 ]
-
-interface types {
-    value?: string;
-    onChange?: (value: string) => void;
-}
-// 上传图片组件
-const CustomUpload: React.FC<types> = ({ value = '', onChange }) => {
-    const fileRef: any = useRef(null);
-    const triggerChange = (url: string) => {
-        onChange?.(url);
-    };
-    return (
-        <React.Fragment>
-            <div className='upbox' style={{ border: value != '' ? 0 : '' }} onClick={() => {
-                fileRef.current.refresh();
-            }}>
-                {value == '' && <React.Fragment>
-                    <span className='iconfont icon-xiangji'></span>
-                    <span className='zi'>选择图片</span>
-                </React.Fragment>}
-                {value != '' && <img alt='' src={value} style={{ width: '100%', height: '100%' }} />}
-            </div>
-
-            {/* 文件库 */}
-            <FileList ref={fileRef} type={1} onOk={(data: any) => {
-                // console.log(data);
-                triggerChange(data[0])
-            }} />
-        </React.Fragment>
-    )
-}
-
 const Index = (_props: any, ref: any) => {
     const formRef: any = useRef(null);
     const editRef: any = useRef(null);
     const { message } = App.useApp();
     const [loading, setLoading] = useState<boolean>(false);
     useEffect(() => {
-        if (_props.type == 'edit') {
+        if (_props.type === 'edit') {
             let value = _props.data.value;
             if (_props.data.type == 5) {
                 value = value == 1 ? true : false;
             }
-            formRef.current.setFieldsValue({
-                type: _props.data.type,
-                title: _props.data.title,
-                value,
-                canDel: _props.data.canDel == 1 ? true : false
-            })
+            if (_props.data.type == 3) {
+                value = value.split(",")
+            }
+            setTimeout(() => {
+                formRef.current.setFieldsValue({
+                    type: _props.data.type,
+                    title: _props.data.title,
+                    value,
+                    canDel: _props.data.canDel == 1 ? true : false,
+                })
+            }, 1000)
             if (_props.data.type == 4) {
-                setTimeout(() => {
-                    editRef.current.setContent(value)
-                }, 100);
+                // setTimeout(() => {
+                //     editRef.current.setContent(value)
+                // }, 100);
             }
         } else {
             formRef.current.setFieldsValue({
@@ -76,16 +47,16 @@ const Index = (_props: any, ref: any) => {
     // 监听数据改变
     const onValuesChange = (res: any, values: any) => {
         let key = Object.keys(res)[0];
-        if (key == 'type') {
+        if (key === 'type') {
             let value = undefined;
-            if (values.type == 5) {
+            if (values.type === 5) {
                 value = false;
             }
             formRef.current.setFieldsValue({
                 value,
             })
-        } else if (key == 'value') {
-            if (values.type == 2) {  // 只能输入数字
+        } else if (key === 'value') {
+            if (values.type === 2) {  // 只能输入数字
                 let value = Helper.getNums(res[key]);
                 formRef.current.setFieldsValue({
                     value,
@@ -95,20 +66,22 @@ const Index = (_props: any, ref: any) => {
     }
     // 提交
     const onFinish = (data: any) => {
-      
         setLoading(true)
-        if (data.type == 4) {
-            data.value = data.value.toHTML();
-        } else if (data.type == 5) {
+        if (data.type === 4) {
+            // data.value = data.value.toHTML();
+        } else if (data.type === 5) {
             data.value = data.value ? 1 : 0;
+        } else if (data.type === 3) {
+            data.value = data.value.join(",")
         }
         var url = 'setting/addSetting';
         if (_props.type == 'edit') {
             url = 'setting/editSetting';
             data.id = _props.data.id;
+        } else {
+            data.canDel = data.canDel ? 1 : 0;
         }
-        data.canDel = data.canDel ? 1 : 0;
-
+        console.log(data);
         req.post(url, data).then(res => {
             if (res.code == 1) {
                 message.success(res.msg, 1.2)
@@ -140,34 +113,35 @@ const Index = (_props: any, ref: any) => {
                         />
                     </Form.Item>
                     <Form.Item className='item49' label='允许删除' name='canDel' valuePropName='checked'>
-                        <Switch disabled={_props.type == 'edit' ? true : false} checkedChildren='是' unCheckedChildren='否' />
+                        <Switch disabled={_props.type === 'edit' ? true : false} checkedChildren='是' unCheckedChildren='否' />
                     </Form.Item>
                     <Form.Item noStyle shouldUpdate={(prev, cur) => prev.type != cur.type}>
                         {({ getFieldValue }) => (
                             <React.Fragment>
                                 {/* 文本 */}
-                                {(getFieldValue('type') == 1 || getFieldValue('type') == 6) && <Form.Item className='row10' label='配置值' name='value' rules={[{ required: true, message: '请输入内容' }]}>
+                                {getFieldValue('type') === 1 && <Form.Item className='row10' label='配置值' name='value' rules={[{ required: true, message: '请输入内容' }]}>
                                     <Input.TextArea rows={8} placeholder='请输入' />
                                 </Form.Item>}
                                 {/* 数字 */}
-                                {getFieldValue('type') == 2 && <Form.Item className='row10' label='配置值' name='value' rules={[{ required: true, message: '请输入内容' }]}>
+                                {getFieldValue('type') === 2 && <Form.Item className='row10' label='配置值' name='value' rules={[{ required: true, message: '请输入内容' }]}>
                                     <Input autoComplete='off' placeholder='请输入' />
                                 </Form.Item>}
                                 {/* 图片 */}
-                                {getFieldValue('type') == 3 && <Form.Item className='row10' label='配置值' name='value' rules={[{ required: true, message: '请输入内容' }]}>
-                                    <CustomUpload />
+                                {getFieldValue('type') === 3 && <Form.Item className='row10' label='配置值' name='value' rules={[{ required: true, message: '请输入内容' }]}>
+                                    <UploadImg />
                                 </Form.Item>}
                                 {/* 图文 */}
-                                {getFieldValue('type') == 4 && <Form.Item className='row10' label='配置值' name='value' rules={[{ required: true, message: '请输入内容' }]}>
+                                {getFieldValue('type') === 4 && <Form.Item className='row10' label='配置值' name='value' rules={[{ required: true, message: '请输入内容' }]}>
                                     <Editor ref={editRef} />
                                 </Form.Item>}
                                 {/* 开关 */}
-                                {getFieldValue('type') == 5 && <Form.Item className='row10' label='配置值' name='value' required valuePropName='checked'>
+                                {getFieldValue('type') === 5 && <Form.Item className='row10' label='配置值' name='value' required valuePropName='checked'>
                                     <Switch checkedChildren='开' unCheckedChildren='关' />
                                 </Form.Item>}
                             </React.Fragment>
                         )}
                     </Form.Item>
+
                 </div>
                 <Button loading={loading} type="primary" htmlType='submit' className='marglauto block margt20'>确定</Button>
             </Form>

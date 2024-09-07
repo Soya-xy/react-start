@@ -3,6 +3,7 @@ import { Table, message } from 'antd'
 import Helper from '../class/Helper';
 
 export default class Index extends React.Component {
+
     static defaultProps = {
         auto: true,  // 是否加载组件就发起请求
     }
