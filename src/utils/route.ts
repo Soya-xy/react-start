@@ -10,8 +10,8 @@ export const routes = [
   { name: 'CodeGenerate', path: lazy(() => import('~C/CodeGenerate')) },
 
   { name: 'Index', path: lazy(() => import('~C/Index')) },
-    { name: 'myTask', path: lazy(() => import('~C/myTask/myTask')) },
-// TODO: add your route here
+  { name: 'myTask', path: lazy(() => import('~C/myTask/myTask')) },
+  // TODO: add your route here
 ]
 
 export const Components = () => {

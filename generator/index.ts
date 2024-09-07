@@ -4,6 +4,7 @@ import type { Plugin } from 'vite'
 import { templateVue } from './const'
 import { templateAdd } from './model'
 import MagicString from 'magic-string';
+import Global from "../src/class/global";
 
 export interface Fields {
   type: string
@@ -19,7 +20,24 @@ export interface GeneratorVueOptions {
   listApi: string
   curdApi: string
   field: Fields[]
+  fetchToken: string
+  parent: any
+  parentID: string | number
 }
+// 查找
+const findMenu = (data: any, path: string) => {
+  for (const item of data) {
+    if (item.path === path) {
+      console.log("🚀 ~ findMenu ~ item:", item)
+      return item
+    } else if (item.child) {
+      const result = findMenu(item.child, path)
+      if (result) return result
+    }
+  }
+  return undefined
+}
+
 
 export default function generator(): Plugin {
   return {
@@ -45,6 +63,98 @@ export default function generator(): Plugin {
           writeFileSync(join(filePath, `${e.filename}.tsx`), content)
           writeFileSync(join(filePath, 'Add.tsx'), modal)
           writeFileSync(join(__dirname, `..${sep}src${sep}utils${sep}route.ts`), s.toString())
+
+          fetch(Global.httpUrl + 'menu/menuList', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'token': e.fetchToken
+            },
+            body: JSON.stringify({
+              page: 1,
+              size: 9999,
+              orderBy: '',
+            })
+          }).then((res: any) => res.json()).then((res: any) => {
+            if (res.code === 1) {
+              const item: any = findMenu(res.data.datas, e.filename)
+              if (!item?.id) {
+                fetch(Global.httpUrl + 'menu/addMenu', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'token': e.fetchToken
+                  },
+                  body: JSON.stringify({
+                    level: e.parent.length,
+                    icon: "icon-jibenguanli",
+                    name: e.menuname + '列表',
+                    path: e.filename,
+                    route: `/admin/${e.listApi}`,
+                    sort: 1,
+                    display: 1,
+                    needLog: 0,
+                    pid: e.parentID,
+                  })
+                }).then((res: any) => res.json()).then((res2: any) => {
+                  console.log("🚀 ~ server.ws.on ~ res2:", res2)
+                  if (res2.code === 1) {
+                    fetch(Global.httpUrl + 'menu/menuList', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'token': e.fetchToken
+                      },
+                      body: JSON.stringify({
+                        page: 1,
+                        size: 9999,
+                        orderBy: '',
+                      })
+                    }).then((res: any) => res.json()).then((res3: any) => {
+                      if (res3.code === 1) {
+                        const items: any = findMenu(res3.data.datas, e.filename)
+                        console.log("🚀 ~ server.ws.on ~ item:", items)
+                        if (items) {
+                          const apiMenu = [
+                            { name: `添加${e.menuname}`, route: `/admin/${e.curdApi.replace("%", "add")}` },
+                            { name: `编辑${e.menuname}`, route: `/admin/${e.curdApi.replace("%", "edit")}` },
+                            { name: `删除${e.menuname}`, route: `/admin/${e.curdApi.replace("%", "del")}` },
+                          ];
+
+                          apiMenu.forEach((menu) => {
+                            fetch(Global.httpUrl + 'menu/addMenu', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json',
+                                'token': e.fetchToken
+                              },
+                              body: JSON.stringify({
+                                level: e.parent.length,
+                                icon: "icon-jibenguanli",
+                                name: menu.name,
+                                path: "",
+                                route: menu.route,
+                                sort: 1,
+                                display: 0,
+                                needLog: 1,
+                                pid: items.id,
+                              })
+                            }).then((res: any) => res.json()).then((res: any) => {
+                              if (res.code === 1) {
+                                console.log('添加菜单成功')
+                              }
+                            })
+                          });
+
+                        }
+                      }
+                    })
+                  }
+                });
+              }
+            }
+          })
+
           server.ws.send('generator:over', { success: true, data: e })
         }
         catch (error) {

@@ -7,7 +7,7 @@ import type { FC } from 'react';
 import { Button, Form, Input, App, Select,DatePicker } from 'antd';
 import CustomSelect from '~/common/Select';
 import * as req from '~/class/request';
-import { CustomUpload } from '~/Set/AddBasic';
+import CustomUpload from '~/common/UploadImg';
 
 const levelList = [
     { value: 'y', label: '正常' },

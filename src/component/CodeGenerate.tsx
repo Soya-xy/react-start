@@ -73,10 +73,8 @@ const CodeGenerate = (_props: any, ref: any) => {
 
 	if (import.meta.hot) {
 		import.meta.hot.on("generator:over", (e) => {
-			if (e.success) {
-
+			if (!e.success) {
 				const parentID = parent[parent.length - 1];
-
 				req.post("menu/menuList", {
 					page: 1,
 					size: 9999,
@@ -88,7 +86,7 @@ const CodeGenerate = (_props: any, ref: any) => {
 							req.post("menu/addMenu", {
 								level: parent.length,
 								icon: "icon-jibenguanli",
-								name: e.data.menuname,
+								name: e.data.menuname + '列表',
 								path: e.data.filename,
 								route: `/admin/${e.data.listApi}`,
 								sort: 1,
@@ -107,9 +105,9 @@ const CodeGenerate = (_props: any, ref: any) => {
 												const item: any = findMenu(res.data.datas, e.data.filename)
 												if (item) {
 													const apiMenu = [
-														`/admin/${e.data.curdApi.replace("%", "add")}`,
-														`/admin/${e.data.curdApi.replace("%", "edit")}`,
-														`/admin/${e.data.curdApi.replace("%", "del")}`,
+														{ name: `添加${e.data.menuname}`, route: `/admin/${e.data.curdApi.replace("%", "add")}` },
+														{ name: `编辑${e.data.menuname}`, route: `/admin/${e.data.curdApi.replace("%", "edit")}` },
+														{ name: `删除${e.data.menuname}`, route: `/admin/${e.data.curdApi.replace("%", "del")}` },
 													];
 
 													apiMenu.forEach((menu) => {
@@ -117,9 +115,9 @@ const CodeGenerate = (_props: any, ref: any) => {
 															.post("menu/addMenu", {
 																level: parent.length,
 																icon: "icon-jibenguanli",
-																name: e.data.menuname,
+																name: menu.name,
 																path: "",
-																route: menu,
+																route: menu.route,
 																sort: 1,
 																display: 0,
 																needLog: 1,
@@ -136,8 +134,6 @@ const CodeGenerate = (_props: any, ref: any) => {
 						}
 					}
 				})
-
-
 			}
 		});
 	}
@@ -146,7 +142,9 @@ const CodeGenerate = (_props: any, ref: any) => {
 		if (import.meta.hot) {
 			await import.meta.hot.send("generator:react", {
 				...values,
-				parent: parent[parent.length - 1],
+				parentID: parent[parent.length - 1],
+				parent,
+				fetchToken: localStorage.getItem('honghuToken')
 			});
 		}
 	}
