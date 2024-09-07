@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, theme,App } from 'antd';
+import { Button, Form, Input, theme, App } from 'antd';
 import {
     useNavigate,
 } from "react-router-dom";
@@ -18,7 +18,7 @@ const Login = () => {
     const [name, setName] = useState('中软互联管理后台');
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        window.reset&&window.reset()
+        window.reset && window.reset()
         getSystemName();
         getCodeUrl();
     }, [])

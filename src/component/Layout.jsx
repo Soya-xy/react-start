@@ -12,6 +12,9 @@ import SetColor from './SetColor';  //主题配色
 import Loading from './Loading';
 import { Components } from '~/utils/route';
 
+import { pathAtom, userInfoAtom } from '~/store/path';
+import { useAtom } from 'jotai';
+
 
 
 function getItem(label, key, path, icon, children, type) {
@@ -49,7 +52,7 @@ const Index = () => {
     const [menu, setMenu] = useState([]);  // 左侧导航数据
     const [tabs, setTabs] = useState([]);  // 右侧顶部打开的页面
     const [activeKey, setActiveKey] = useState('');  // 当前选中的tab页
-    const [path, setPath] = useState('');  // 当前tab展示的内容页
+    const [path, setPath] = useAtom(pathAtom);  // 当前tab展示的内容页
     const [pwdVisible, setPwdVisible] = useState(false);  // 修改密码弹出层
     const [infoVisible, setInfoVisible] = useState(false);  // 修改个人信息弹出层
     const [themeVisible, setThemeVisible] = useState(false);  // 主题弹出层

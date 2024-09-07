@@ -7,6 +7,9 @@ export const routes = [
   { name: 'MenuSet', path: lazy(() => import('~C/Set/MenuSet')) },
   { name: 'UploadSet', path: lazy(() => import('~C/Set/UploadSet')) },
   { name: 'OperationLog', path: lazy(() => import('~C/Set/OperationLog')) },
+  { name: 'CodeGenerate', path: lazy(() => import('~C/CodeGenerate')) },
+
+  { name: 'Index', path: lazy(() => import('~C/Index')) },
   // TODO: add your route here
 ]
 
